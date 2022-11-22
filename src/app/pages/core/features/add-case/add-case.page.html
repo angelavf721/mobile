@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="header">
+      <h3>Alerta Amber</h3>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <form [formGroup]="form">
+    <div class="card">
+      <div class="img-card">
+        <input
+          (change)="openImagePicker($event)"
+          type="file"
+          accept="image/png, image/gif, image/jpeg">
+        <img [src]="form.value.photoURL || '../../../../../assets/icon/user_add_21977%20(1).png'">
+      </div>
+
+      <div class="card-content">
+        <ion-item>
+          <ion-label position="stacked">Nome</ion-label>
+          <ion-input
+            required
+            type="text"
+            formControlName="nome"
+            placeholder="Nome da Criança ou Adolecente desparecido"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="nome.errors && nome.dirty || nome.touched && nome.invalid">
+            Nome Obrigatorio
+          </div>
+        </div>
+
+        <ion-item>
+          <ion-input
+            formControlName="data"
+            placeholder="Dia/Mês/Ano"
+            value="{{ date | date: 'dd/MM/yyyy' }}"
+            id="date"
+            class="ion-text-end">
+            Data do Desparecimento
+          </ion-input>
+          <ion-popover
+            trigger="date"
+            size="cover">
+            <ng-template>
+              <ion-datetime
+                mode="ios"
+                locale="pt-BR-u-hc-h12"
+                presentation="date"
+                [(ngModel)]="date"
+                [ngModelOptions]="{standalone: true}"
+                [showDefaultButtons]="true"
+                doneText="Confirmar"
+                cancelText="Cancelar">
+              </ion-datetime>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="data.errors && data.dirty || data.touched && data.invalid">
+            Data é Obrigatorio
+          </div>
+        </div>
+
+        <ion-item>
+          <ion-label position="stacked">Informações do possível suspeito:</ion-label>
+          <ion-textarea
+            type="text"
+            formControlName="suspeito"
+            placeholder="caracteristicas físicas do suspeito"></ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Enviar informações para:</ion-label>
+          <ion-input
+            required
+            type="number"
+            formControlName="contato"
+            placeholder="número para informações"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="contato.errors && contato.dirty || contato.touched && contato.invalid">
+            Contato é Obrigatorio
+          </div>
+
+          <ion-item>
+            <ion-label position="stacked">Ultimo local visto:</ion-label>
+            <ion-textarea
+              required
+              type="text"
+              formControlName="local"
+              placeholder="Onde a criança foi vista pela ultima vez?"></ion-textarea>
+          </ion-item>
+          <div class="validation-errors">
+            <div
+              class="error-message"
+              *ngIf="local.errors && local.dirty || local.touched && local.invalid">
+              local é Obrigatorio
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      mode="ios"
+      class="card-buttons">
+      <ion-button
+        [disabled]="form.invalid"
+        expand="block"
+        (click)="submit()"
+        color="primary">
+        Cadastrar
+      </ion-button>
+      <ion-button
+        #cancelButton
+        href
+        color="danger">
+        Cancelar
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

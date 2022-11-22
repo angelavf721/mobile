@@ -1,0 +1,72 @@
+import {Injectable} from '@angular/core';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import firebase from 'firebase/compat';
+import {Router} from '@angular/router';
+import {User} from '../../../utils/models/user.model';
+import {Storage} from '@ionic/storage-angular';
+import {AngularFireDatabase} from '@angular/fire/compat/database';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+
+  constructor(private auth: AngularFireAuth,
+              private router: Router,
+              private db: AngularFireDatabase,
+              private storage: Storage) {
+  }
+
+  createUserWithEmailAndPassword(email: string,
+                                 password: string,
+                                 name: string,
+                                 telefone: string
+  ) {
+    this.auth.createUserWithEmailAndPassword(email, password).then(res => {
+      const userToSave: User = {
+        _id: res.user.uid,
+        name,
+        email: res.user.email,
+        photoURL: res.user.photoURL,
+        phoneNumber: telefone
+      };
+      this.db.database.ref('Users/' + res.user.uid).set(userToSave);
+      this.saveUserOnStorage(userToSave).then(() => this.router.navigate(['/home']));
+    });
+  }
+
+  updateUser(user: firebase.User, nome: string, telefone: string) {
+    this.auth.updateCurrentUser(user).then(res => {
+      console.log(res);
+    });
+  }
+
+  loginWithEmail(email: string, password: string) {
+    this.auth.signInWithEmailAndPassword(email, password).then(res => {
+      this.db.database.ref('Users/' + res.user.uid).get().then(user => {
+        // LEMBRA DE USAR O .val();
+        this.saveUserOnStorage(user.val()).then(() => this.router.navigate(['/home']));
+      });
+    });
+  }
+
+  saveUserOnStorage(user: User) {
+    return this.storage.set('User', user);
+  }
+
+  // creat(nome: string, data: string, suspeito: string, telefone: string) {
+  //   const caseSalve = {
+  //     name: nome,
+  //     datas: data,
+  //     suspeitos: suspeito,
+  //     contato: telefone
+  //   };
+  //   this.db.database.ref('Casos/').push(caseSalve).then(res => {
+  //     console.log(caseSalve);
+  //     console.log('Cadastrei');
+  //   });
+  //}
+
+
+}

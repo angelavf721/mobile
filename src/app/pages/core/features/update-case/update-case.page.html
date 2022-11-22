@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="header">
+      <h3>Alerta Amber</h3>
+      <div class="options">
+        <div class="option ion-activatable ripple-parent">
+          <ion-icon name="search-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
+        <div class="option ion-activatable ripple-parent">
+          <ion-icon name="bookmark-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
+        <!-- <div class="option ion-activatable ripple-parent"> -->
+        <!-- <ion-badge>1</ion-badge> -->
+        <!-- <ion-icon name="notifications-outline"></ion-icon> -->
+        <!-- <ion-ripple-effect></ion-ripple-effect> -->
+        <!-- </div> -->
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <h3>Upadate</h3>
+  <ion-card>
+    <form [formGroup]="form">
+      <div class="card">
+        <div class="img-card">
+          <input
+            (change)="openImagePicker($event)"
+            type="file"
+            accept="image/png, image/gif, image/jpeg">
+          <img [src]="form.value.photoURL || '../../../../../assets/icon/user_add_21977%20(1).png'">
+        </div>
+
+        <div class="card-content">
+          <ion-item>
+            <ion-label position="stacked">Nome</ion-label>
+            <ion-input
+              required
+              type="text"
+              formControlName="nome"
+              [value]="nome.value"
+              placeholder="Nome da Criança ou Adolecente desparecido"></ion-input>
+          </ion-item>
+          <!-- <div class="validation-errors">
+            <div class="error-message">Nome Obrigatorio</div>
+          </div> -->
+
+          <ion-item>
+            <ion-label>Pick date</ion-label>
+            <ion-input
+              value="{{ date | date: 'dd.MM.yyyy' }}"
+              id="date"
+              class="ion-text-end"></ion-input>
+            <ion-popover
+              trigger="date"
+              size="cover">
+              <ng-template>
+                <ion-datetime
+                  presentation="date"
+                  [(ngModel)]="date"
+                  locale="sl-SI"></ion-datetime>
+              </ng-template>
+            </ion-popover>
+          </ion-item>
+          <!-- <div class="validation-errors">
+            <div class="error-message">Data é Obrigatorio</div>
+          </div> -->
+          <ion-item>
+            <ion-label position="stacked">Informações do possível suspeito:</ion-label>
+            <ion-textarea
+              type="text"
+              formControlName="suspeito"
+              [value]="form.value.suspeito"
+              placeholder="caracteristicas físicas do suspeito"></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Enviar informações para:</ion-label>
+            <ion-textarea
+              required
+              type="number"
+              formControlName="contato"
+              [value]="contato.value"
+              placeholder="número para informações"></ion-textarea>
+          </ion-item>
+          <div class="validation-errors">
+            <!-- <div class="error-message">Contato é Obrigatorio</div> -->
+
+          </div>
+        </div>
+      </div>
+      <div
+        mode="ios"
+        class="card-buttons">
+        <ion-button
+          [disabled]="form.invalid"
+          expand="block"
+          (click)="submit()"
+          color="primary">
+          Cadastrar
+        </ion-button>
+        <ion-button
+          href
+          color="danger">
+          Cancelar
+        </ion-button>
+      </div>
+    </form>
+  </ion-card>
+</ion-content>

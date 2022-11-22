@@ -1,0 +1,50 @@
+.contener {
+  font-size: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  //margin-top: 10rem;
+  color:black;
+}
+
+.header {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16rem;
+  color: black;
+}
+
+.tags{
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+
+ion-icon{
+  color:black;
+}
+
+.card-buttons{
+  display: flex;
+  margin:5px;
+  padding: 1rem;
+  flex-direction: column;
+}
+.validation-errors {
+  font-size: small;
+  color: var(--ion-color-danger, #f1453d);
+}
+
+/* These are necessary to make the underline red */
+ion-item.invalid {
+  --highlight-background: var(--ion-color-danger, #f1453d);
+}
+
+ion-item {
+  --highlight-color-invalid: var(--ion-color-primary);
+}

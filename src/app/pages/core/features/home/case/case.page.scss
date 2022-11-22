@@ -1,0 +1,62 @@
+.header {
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options {
+  display: flex;
+  gap: 1rem;
+
+  .option {
+    font-size: 1.5rem;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+
+    ion-badge {
+      font-size: 7px;
+      position: absolute;
+      top: 0;
+      right: 5px;
+      }
+    }
+  }
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+.card{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color:black;
+
+  .card-header {
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    span {
+      font-size: 1.5rem;
+    }
+  }
+
+  .img-card{
+    height: 400px;
+    display: flex;
+  }
+  .card-content{
+    font-size: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+  }
+}
+

@@ -1,0 +1,33 @@
+.header {
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  font-family: Times New Roman;
+  justify-content: flex-end;
+}
+
+.options {
+  display: flex;
+  gap: 1rem;
+
+  .option {
+    font-size: 2rem;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+
+    ion-badge {
+      font-size: 7px;
+      position: absolute;
+      top: 0;
+      right: 5px;
+    }
+  }
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+}

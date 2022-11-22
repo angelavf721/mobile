@@ -1,0 +1,76 @@
+<ion-toolbar>
+    <div class="header">
+      <h3>Cadastro</h3>
+    </div>
+</ion-toolbar>
+
+<ion-content>
+  <div class="card">
+        <ion-list>
+          <form [formGroup]="form">
+<!--            <div class="card-content">-->
+            <ion-item>
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              <ion-input formControlName="nome" placeholder="Nome"
+                         required type="text"></ion-input>
+              <!--              formControlName="nome"-->
+            </ion-item>
+            <div class="validation-errors">
+              <div class="error-message" *ngIf="nome.errors && nome.dirty || nome.touched && nome.invalid">
+                Nome Obrigatorio
+              </div>
+            </div>
+
+            <ion-item >
+              <ion-icon name="mail-outline" slot="start"></ion-icon>
+              <ion-input formControlName="email"
+                         placeholder="Email" type="email"></ion-input>
+            </ion-item>
+<!--            <div *ngIf="email.invalid"> Name is too short. </div>-->
+            <div class="validation-errors">
+              <div class="error-message" *ngIf="email.errors && email.dirty || email.touched && email.invalid">
+                Seu E-Mail é invalido!
+              </div>
+            </div>
+
+            <ion-item>
+              <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+              <ion-input formControlName="senha" maxlength="8"
+                         placeholder="Senha" required type="password"></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+              <div class="error-message" *ngIf="senha.errors && senha.dirty || senha.touched && senha.invalid">
+                Senha obrigatoria
+              </div>
+            </div>
+
+            <ion-item>
+              <ion-icon name="call-outline" slot="start"></ion-icon>
+              <ion-input formControlName="telefone" placeholder="Telefone"
+                         required type="number"></ion-input>
+              <!--               formControlName="telefone"-->
+            </ion-item>
+            <div class="validation-errors">
+              <div class="error-message" *ngIf="telefone.errors && telefone.dirty || telefone.touched && telefone.invalid">
+                Telefone Obrigatorio
+              </div>
+            </div>
+<!--              </div>-->
+            <div class="card-buttons" mode="ios">
+              <ion-button
+                [disabled]="form.invalid"
+                (click)="submit()"
+                color="primary"
+                expand="block">
+                Cadastrar
+              </ion-button>
+            </div>
+
+
+            <div class="tags">
+              <ion-label><a href="login">Já possui cadastro!?! Login</a></ion-label>
+            </div>
+          </form>
+        </ion-list>
+  </div>
+</ion-content>

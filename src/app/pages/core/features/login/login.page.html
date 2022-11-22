@@ -1,0 +1,49 @@
+<ion-toolbar>
+  <div class="header">
+    <h3>Login</h3>
+  </div>
+</ion-toolbar>
+<ion-content>
+  <div class="contener">
+        <ion-list>
+          <form [formGroup]="form">
+            <ion-item>
+              <ion-icon name="mail-outline" slot="start"></ion-icon>
+              <ion-input formControlName="email" placeholder="Email"
+                         type="email"></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+              <div class="error-message" *ngIf="email.errors && email.dirty || email.touched && email.invalid">
+                Seu E-Mail é invalido!
+              </div>
+            </div>
+
+            <ion-item>
+              <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+              <ion-input formControlName="senha" maxlength="8"
+                         placeholder="Senha" type="password"></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+              <div class="error-message" *ngIf="senha.errors && senha.dirty || senha.touched && senha.invalid">
+                Senha obrigatoria
+              </div>
+            </div>
+
+            <div class="card-buttons" mode="ios">
+              <ion-button
+                [disabled]="form.invalid"
+                expand="block"
+                (click)="login()"
+                color="primary"
+                expand="block">
+                Logar
+              </ion-button>
+            </div>
+
+            <div class="tags">
+              <ion-label><a href="cadastro">Cadastre-se</a></ion-label>
+            </div>
+          </form>
+        </ion-list>
+  </div>
+</ion-content>
