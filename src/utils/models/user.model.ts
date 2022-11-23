@@ -4,4 +4,5 @@ export class User {
   email: string;
   photoURL: string;
   phoneNumber: string;
+  savedCasesId?: string[];
 }

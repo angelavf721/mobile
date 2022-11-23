@@ -35,12 +35,12 @@
 
             <ion-item>
               <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-              <ion-input formControlName="senha" maxlength="8"
-                         placeholder="Senha" required type="password"></ion-input>
+              <ion-input formControlName="senha" minlength="6"
+                         placeholder="A senha deve conter no mínimo 6 caracteres" required type="password"></ion-input>
             </ion-item>
             <div class="validation-errors">
-              <div class="error-message" *ngIf="senha.errors && senha.dirty || senha.touched && senha.invalid">
-                Senha obrigatoria
+              <div class="error-message" *ngIf="senha.touched && senha.invalid">
+                A senha deve conter no mínimo 6 caracteres
               </div>
             </div>
 

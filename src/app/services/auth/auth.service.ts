@@ -36,9 +36,9 @@ export class AuthService {
     });
   }
 
-  updateUser(user: firebase.User, nome: string, telefone: string) {
-    this.auth.updateCurrentUser(user).then(res => {
-      console.log(res);
+  updateUser(userId: string, updatedUser: User) {
+    return this.db.database.ref('Users/' + userId).update(updatedUser).then(() => {
+      this.saveUserOnStorage(updatedUser);
     });
   }
 
@@ -48,6 +48,11 @@ export class AuthService {
         // LEMBRA DE USAR O .val();
         this.saveUserOnStorage(user.val()).then(() => this.router.navigate(['/home']));
       });
+    });
+  }
+  logout(){
+    this.auth.signOut().then(() => this.router.navigate(['/login'])).then(() => {
+      this.saveUserOnStorage(undefined);
     });
   }
 

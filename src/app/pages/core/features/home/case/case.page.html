@@ -16,21 +16,19 @@
         <img [src]="case.photoURL || '../../../../../assets/fotosKids/avatar.jpg'">
       </div>
           <div class="card-header">
-<!--          <div class="header">-->
             <span>
               {{ case.name }}
             </span>
-            <div class="options">
+            <div *ngIf="case.ownerID === user?._id" class="options">
               <div class="option ion-activatable ripple-parent">
                 <ion-icon (click)="editarCaso()" name="pencil-outline"></ion-icon>
                 <ion-ripple-effect></ion-ripple-effect>
               </div>
               <div class="option ion-activatable ripple-parent">
-              <ion-icon color="danger" (click)="apagarCaso()" name="trash-outline"></ion-icon>
+              <ion-icon color="danger" (click)="presentAlert()" name="trash-outline"></ion-icon>
                 <ion-ripple-effect></ion-ripple-effect>
               </div>
             </div>
-<!--          </div>-->
           </div>
       <div class="card-content">
           <label>
