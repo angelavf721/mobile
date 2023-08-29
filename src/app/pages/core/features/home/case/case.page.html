@@ -13,36 +13,33 @@
   <ion-card>
     <div class="card">
       <div class="img-card">
-        <img [src]="case.photoURL || '../../../../../assets/fotosKids/avatar.jpg'">
+        <img [src]="case.photoURL || '../../../../../assets/fotosKids/avatar.jpg'" />
       </div>
-          <div class="card-header">
-            <span>
-              {{ case.name }}
-            </span>
-            <div *ngIf="case.ownerID === user?._id" class="options">
-              <div class="option ion-activatable ripple-parent">
-                <ion-icon (click)="editarCaso()" name="pencil-outline"></ion-icon>
-                <ion-ripple-effect></ion-ripple-effect>
-              </div>
-              <div class="option ion-activatable ripple-parent">
-              <ion-icon color="danger" (click)="presentAlert()" name="trash-outline"></ion-icon>
-                <ion-ripple-effect></ion-ripple-effect>
-              </div>
-            </div>
+      <div class="card-header">
+        <span> {{ case.nome }} </span>
+        <div
+          *ngIf="case.ownerID === user?._id"
+          class="options">
+          <div class="option ion-activatable ripple-parent">
+            <ion-icon
+              (click)="editarCaso()"
+              name="pencil-outline"></ion-icon>
+            <ion-ripple-effect></ion-ripple-effect>
           </div>
+          <div class="option ion-activatable ripple-parent">
+            <ion-icon
+              color="danger"
+              (click)="presentAlert()"
+              name="trash-outline"></ion-icon>
+            <ion-ripple-effect></ion-ripple-effect>
+          </div>
+        </div>
+      </div>
       <div class="card-content">
-          <label>
-            Dia do desaparecimento:{{ case.datas }}
-          </label>
-          <label>
-            Informações do possível suspeito: {{ case.suspeito }}
-          </label>
-          <label>
-            Enviar informações para: {{ case.contato }}
-          </label>
-          <label>
-            Ultimo local visto: {{case.local}}
-          </label>
+        <label> Dia do desaparecimento:{{ case.data }} </label>
+        <label> Informações do possível suspeito: {{ case.suspeito }} </label>
+        <label> Enviar informações para: {{ case.contato }} </label>
+        <label> Ultimo local visto: {{case.local}} </label>
       </div>
     </div>
   </ion-card>

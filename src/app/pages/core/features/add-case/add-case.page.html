@@ -89,19 +89,10 @@
             *ngIf="contato.errors && contato.dirty || contato.touched && contato.invalid">
             Contato é Obrigatorio
           </div>
-
-          <ion-item>
-            <ion-label position="stacked">Ultimo local visto:</ion-label>
-            <ion-textarea
-              required
-              type="text"
-              formControlName="local"
-              placeholder="Onde a criança foi vista pela ultima vez?"></ion-textarea>
-          </ion-item>
           <div class="validation-errors">
             <div
               class="error-message"
-              *ngIf="local.errors && local.dirty || local.touched && local.invalid">
+              *ngIf="lat.errors && lat.dirty || lat.touched && lat.invalid">
               local é Obrigatorio
             </div>
           </div>
@@ -113,17 +104,17 @@
       mode="ios"
       class="card-buttons">
       <ion-button
+        #cancelButton
+        (click)="goToHome()"
+        color="danger">
+        Cancelar
+      </ion-button>
+      <ion-button
         [disabled]="form.invalid"
         expand="block"
         (click)="submit()"
         color="primary">
-        Cadastrar
-      </ion-button>
-      <ion-button
-        #cancelButton
-        href
-        color="danger">
-        Cancelar
+        {{!!this.case ? 'Editar' : 'Cadastrar'}}
       </ion-button>
     </div>
   </form>
