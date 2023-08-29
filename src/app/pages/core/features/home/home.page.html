@@ -27,10 +27,11 @@
                     *ngFor="let item of searchedItems"
                     (click)="openCase(item)">
                     <ion-avatar slot="start">
-                      <ion-img [src]="item.photoURL || '../../../../../assets/fotosKids/avatar.jpg'"></ion-img>
+                      <ion-img
+                        [src]="item.photoURL || '../../../../../assets/fotosKids/avatar.jpg'"></ion-img>
                     </ion-avatar>
                     <ion-label>
-                      <h2>{{ item.name }}</h2>
+                      <h2>{{ item.nome }}</h2>
                     </ion-label>
                   </ion-item>
                 </ion-list>
@@ -47,13 +48,17 @@
           <ion-popover trigger="hover-trigger">
             <ng-template>
               <ion-content>
-                <ion-list *ngIf="savedCasesList.length" [inset]="true">
-                  <ion-item *ngFor="let item of savedCasesList" (click)="openCase(item)">
+                <ion-list
+                  *ngIf="savedCasesList.length"
+                  [inset]="true">
+                  <ion-item
+                    *ngFor="let item of savedCasesList"
+                    (click)="openCase(item)">
                     <ion-avatar slot="start">
-                      <img [src]="item.photoURL || '../../../../../assets/fotosKids/avatar.jpg'">
+                      <img [src]="item.photoURL || '../../../../../assets/fotosKids/avatar.jpg'" />
                     </ion-avatar>
                     <ion-label>
-                      <h2>{{ item.name }}</h2>
+                      <h2>{{ item.nome }}</h2>
                     </ion-label>
                   </ion-item>
                 </ion-list>
@@ -64,18 +69,18 @@
             </ng-template>
           </ion-popover>
         </div>
-          <div class="option ion-activatable ripple-parent">
-            <ion-icon (click)="sair()" name="power-outline"></ion-icon>
-            <ion-ripple-effect></ion-ripple-effect>
-          </div>
+        <div class="option ion-activatable ripple-parent">
+          <ion-icon
+            (click)="sair()"
+            name="power-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
       </div>
-
     </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
-
   <div *ngIf="loading">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
@@ -91,19 +96,19 @@
           <div
             (click)="openCase(item)"
             class="img-card">
-            <img [src]="item.photoURL || '../../../../../assets/fotosKids/avatar.jpg'">
+            <img [src]="item.photoURL || '../../../../../assets/fotosKids/avatar.jpg'" />
           </div>
 
           <div class="card-header">
-            <span>{{ item.name }}</span>
+            <span>{{ item.nome }}</span>
             <div class="options">
               <div class="option ion-activatable ripple-parent">
                 <div class="salve-button">
                   <!-- <ion-icon color="#e1e1e1"  name="bookmark-sharp"></ion-icon> -->
-                  <ion-icon (click)="addLista(item._id)"
-                            [name]="!caseIsSaved(item._id) ? 'bookmark-outline' : 'bookmark'"
-                            [ngStyle]="{'color': !caseIsSaved(item._id) ? 'black' : 'red' }"></ion-icon>
-
+                  <ion-icon
+                    (click)="addLista(item._id)"
+                    [name]="!caseIsSaved(item._id) ? 'bookmark-outline' : 'bookmark'"
+                    [ngStyle]="{'color': !caseIsSaved(item._id) ? 'black' : 'red' }"></ion-icon>
                 </div>
                 <ion-ripple-effect></ion-ripple-effect>
               </div>
@@ -111,18 +116,10 @@
           </div>
 
           <div class="card-content">
-            <label>
-              Data do desaparecimento: {{ item.datas }}
-            </label>
-            <label>
-              Informações do possível suspeito: {{ item.suspeito }}
-            </label>
-            <label>
-              Enviar informações para: {{item.contato}}
-            </label>
-            <label>
-              Ultimo local visto: {{item.local}}
-            </label>
+            <label> Data do desaparecimento: {{ item.data }} </label>
+            <label> Informações do possível suspeito: {{ item.suspeito }} </label>
+            <label> Enviar informações para: {{item.contato}} </label>
+            <label> Ultimo local visto: {{item.local}} </label>
           </div>
         </div>
       </ion-card>
@@ -130,20 +127,16 @@
     <div
       *ngIf="!items.length"
       class="empty-message">
-
       <ion-card color="warning">
-
         <ion-card-header>
           <div class="car-alert">
             <ion-card-title>Nenhum caso registrado</ion-card-title>
             <ion-card-content>
-              Se desejajar adicionar um caso
-            clique em "Adiconar Caso" no menu abaixo
+              Se desejajar adicionar um caso clique em "Adiconar Caso" no menu abaixo
             </ion-card-content>
           </div>
         </ion-card-header>
       </ion-card>
     </div>
   </div>
-
 </ion-content>

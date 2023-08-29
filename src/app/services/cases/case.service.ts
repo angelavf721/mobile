@@ -4,6 +4,16 @@ import {Storage} from '@ionic/storage-angular';
 import {Router} from '@angular/router';
 import { User } from '../../../utils/models/user.model';
 
+interface Case {
+  nome: string;
+  data: string;
+  suspeito: string;
+  contato: number;
+  lat: number;
+  lng: number;
+  photoURL: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,32 +30,21 @@ export class CaseService {
     });
   }
 
-  create(nome: string, data: string, suspeito: string, telefone: string,local: string, photoURL: string) {
+  create(body: Case) {
     const ref = this.db.database.ref('Casos/').push();
     const key = ref.key;
     return ref.set({
-      // eslint-disable-next-line no-underscore-dangle
       ownerID: this.user._id,
       _id: key,
-      name: nome,
-      datas: data,
-      suspeito,
-      contato: telefone,
-      local: local,
-      photoURL
+      ...body
     }).then(() => this.router.navigate(['/home']));
   }
 
-  update(caseID: string, nome: string, data: string, suspeito: string, telefone: string, local: string, photoURL: string) {
+  update(caseID: string, body: Case) {
     console.log('UPDATE');
     return this.db.database.ref('Casos/' + caseID).update({
-      name: nome,
-      datas: data,
-      suspeito: suspeito,
-      contato: telefone,
-      local: local,
-      photoURL
-    }).then(() => window.location.reload());
+      body
+    }).then(() => this.router.navigate(['/home']));
   }
 
   delete(caseID: string) {
