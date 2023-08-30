@@ -26,8 +26,6 @@ export class HomePage implements OnInit {
   @Input() case: any;
   constructor(private modalController: ModalController,
               private authService: AuthService,
-              private alertController: AlertController,
-              private afs: AngularFirestore,
               private db: AngularFireDatabase,
               private storage: Storage) {
   }
@@ -78,7 +76,6 @@ export class HomePage implements OnInit {
   }
 
   search(event: any) {
-    console.log("🚀 -> search -> event", event.detail.value);
     this.searchedItems = this.items.filter(item => (item.name as string).includes(event.detail.value));
   }
 
