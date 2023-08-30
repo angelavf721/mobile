@@ -4,17 +4,23 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddCasePageRoutingModule } from './add-case-routing.module';
-
 import { AddCasePage } from './add-case.page';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: AddCasePage
+  }
+];
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         IonicModule,
-        AddCasePageRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RouterModule.forChild(routes)
     ],
   declarations: [AddCasePage]
 })

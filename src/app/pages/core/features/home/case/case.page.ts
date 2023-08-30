@@ -4,6 +4,7 @@ import {AlertController, ModalController} from '@ionic/angular';
 import {CaseService} from '../../../../../services/cases/case.service';
 import {User} from "../../../../../../utils/models/user.model";
 import {Storage} from "@ionic/storage-angular";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-case',
@@ -19,7 +20,8 @@ export class CasePage implements OnInit {
   constructor(private modalController: ModalController,
               private storage: Storage,
               private caseService: CaseService,
-              private alertController: AlertController) {
+              private alertController: AlertController,
+              private router: Router) {
   }
 
   async presentAlert() {
@@ -56,13 +58,12 @@ export class CasePage implements OnInit {
   }
 
   async editarCaso() {
-    const modal = await this.modalController.create({
-      component: AddCasePage,
-      componentProps: {
+    this.close();
+    this.router.navigate(['edit-case'], {
+      state: {
         case: this.case
       }
     });
-    await modal.present();
   }
 
 

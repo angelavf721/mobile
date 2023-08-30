@@ -5,6 +5,7 @@ import { ModalController, ToastController } from '@ionic/angular';
 import { nanoid } from 'nanoid';
 import { CaseService } from '../../../../services/cases/case.service';
 import * as L from 'leaflet';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-case',
@@ -26,8 +27,13 @@ export class AddCasePage implements OnInit {
     private caseService: CaseService,
     private afStore: AngularFireStorage,
     private fb: FormBuilder,
-    private modalController: ModalController,
-  ) {}
+    private router: Router
+  ) {
+    const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
+    if(selectedCase) {
+      this.case = selectedCase
+    }
+  }
 
   get nome(): AbstractControl {
     return this.form.get('nome');
@@ -71,7 +77,7 @@ export class AddCasePage implements OnInit {
   ionViewDidEnter() {
     let lat: number;
     let lng: number;
-    if(!this.lat.value) {
+    if(!this.case) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           lat = pos.coords.latitude;
@@ -89,7 +95,7 @@ export class AddCasePage implements OnInit {
   }
 
   intiMap(lat: number, lng: number) {
-    this.map = L.map('map').setView([lat || 0, lng || 0], 13);
+    this.map = L.map(!!this.case ? 'edit-map' : 'create-map').setView([lat || 0, lng || 0], 13);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
     });
@@ -134,6 +140,11 @@ export class AddCasePage implements OnInit {
   }
 
   goToHome() {
-    this.modalController.dismiss();
+    this.router.navigate(['/home']);
   }
+
+  ionViewDidLeave() {
+    this.map.remove();
+  }
+
 }

@@ -17,6 +17,10 @@ const routes: Routes = [
         loadChildren: () => import('./features/add-case/add-case.module').then(m => m.AddCasePageModule)
       },
       {
+        path: 'edit-case',
+        loadChildren: () => import('./features/add-case/add-case.module').then(m => m.AddCasePageModule)
+      },
+      {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.module').then( m => m.SettingsPageModule)
       },
