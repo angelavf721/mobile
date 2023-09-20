@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "834947400379",
+    "firebase_url": "https://bd-amber-default-rtdb.firebaseio.com",
+    "project_id": "bd-amber",
+    "storage_bucket": "bd-amber.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834947400379:android:37ee9563cedc1e32f05f9e",
+        "android_client_info": {
+          "package_name": "app.alerta_amber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834947400379-ij2lk9s77kt08q2034brb5i405mfc5ch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.alerta_amber",
+            "certificate_hash": "f2741ce83d60c5fee040d4d580a59e8648da7d05"
+          }
+        },
+        {
+          "client_id": "834947400379-0mu30err9sm0tadvbrrf8vdnrupkd41k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXwaJEecisAOZsZgIzPIe_rgASsfBeC4Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834947400379-0mu30err9sm0tadvbrrf8vdnrupkd41k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

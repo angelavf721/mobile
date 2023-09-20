@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage';
-
+import { FcmService } from './services/push-notifications/fmc.service';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +9,18 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private fcmService: FcmService,
+    private platform: Platform) {
     console.log('#AppComponent');
+    console.log('#AppComponent2');
     this.storage.create();
+    this.initializeApp();
   }
 
+  initializeApp() {
+    console.log("🚀 ~ file: app.component.ts:20 ~ AppComponent ~ initializeApp ~ initializeApp:")
+    this.platform.ready().then(() => {
+      this.fcmService.initPush();
+    });
+  }
 }

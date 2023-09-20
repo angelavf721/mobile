@@ -1,10 +1,15 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'HR',
+  appId: 'app.alerta_amber',
+  appName: 'Alerta Amber',
   webDir: 'www',
-  bundledWebRuntime: false
+  bundledWebRuntime: false,
+  plugins: {
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
+  },
 };
 
 export default config;
