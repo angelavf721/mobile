@@ -19,7 +19,7 @@
             <ng-template>
               <ion-content>
                 <ion-searchbar
-                  (ionChange)="search($event)"
+                  (ionInput)="search($event)"
                   (click)="modal.setCurrentBreakpoint(0.75)"
                   placeholder="Search"></ion-searchbar>
                 <ion-list>
@@ -116,8 +116,7 @@
           </div>
 
           <div class="card-content">
-            <label> Data do desaparecimento: {{ item.data }} </label>
-            <label> Informações do possível suspeito: {{ item.suspeito }} </label>
+            <label> Data do desaparecimento: {{ item.data | date: 'dd/MM/yyyy' }} </label>
             <label> Enviar informações para: {{item.contato}} </label>
             <label> Ultimo local visto: {{item.local}} </label>
           </div>

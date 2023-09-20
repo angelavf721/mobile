@@ -17,7 +17,6 @@ import { DatePipe, Location } from '@angular/common';
   providers: [DatePipe],
 })
 export class AddCasePage implements OnInit {
-  date: string;
   form: FormGroup;
   case: any;
 
@@ -38,10 +37,7 @@ export class AddCasePage implements OnInit {
   ) {
     const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
     if (selectedCase) {
-      this.case = {
-        ...selectedCase,
-        data: this.datePipe.transform(selectedCase.data, 'dd/MM/yyyy'),
-      };
+      this.case = selectedCase;
     }
   }
 
@@ -78,12 +74,16 @@ export class AddCasePage implements OnInit {
     this.form = this.fb.group({
       nome: [this.case?.nome, Validators.required],
       data: [this.case?.data, Validators.required],
-      suspeito: [this.case?.suspeito, Validators.required],
       contato: [this.case?.contato, Validators.required],
       lat: [this.case?.lat, Validators.required],
       lng: [this.case?.lng, Validators.required],
       photoURL: [this.case?.photoURL],
     });
+  }
+
+  setDate(event: any) {
+    this.data.patchValue(event.detail.value);
+    this.data.updateValueAndValidity();
   }
 
   ionViewDidEnter() {
@@ -92,7 +92,6 @@ export class AddCasePage implements OnInit {
       this.form.patchValue({
         nome: this.case?.nome,
         data: this.case?.data,
-        suspeito: this.case?.suspeito,
         contato: this.case?.contato,
         lat: this.case?.lat,
         lng: this.case?.lng,
@@ -169,11 +168,6 @@ export class AddCasePage implements OnInit {
         });
       });
     }
-  }
-
-  updateData() {
-    this.data.patchValue(this.date);
-    this.data.updateValueAndValidity();
   }
 
   submit() {

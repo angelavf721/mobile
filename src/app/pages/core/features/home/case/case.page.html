@@ -36,8 +36,7 @@
         </div>
       </div>
       <div class="card-content">
-        <label> Dia do desaparecimento:{{ case.data }} </label>
-        <label> Informações do possível suspeito: {{ case.suspeito }} </label>
+        <label> Dia do desaparecimento:{{ case.data | date: 'dd/MM/yyyy' }} </label>
         <label> Enviar informações para: {{ case.contato }} </label>
         <label> Ultimo local visto: {{case.local}} </label>
       </div>
