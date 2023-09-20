@@ -1,97 +1,183 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ToastController, ModalController } from "@ionic/angular";
-import {CaseService} from '../../../../services/cases/case.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { nanoid } from 'nanoid'
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
+import { Geolocation } from '@capacitor/geolocation';
+import { ToastController } from '@ionic/angular';
+import * as L from 'leaflet';
+import { nanoid } from 'nanoid';
+import { CaseService } from '../../../../services/cases/case.service';
+import { DatePipe, Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-case',
   templateUrl: './add-case.page.html',
   styleUrls: ['./add-case.page.scss'],
+  providers: [DatePipe],
 })
 export class AddCasePage implements OnInit {
-  date: string;
   form: FormGroup;
   case: any;
 
-  constructor(private toastController: ToastController,
-              private caseService: CaseService,
-              private afStore: AngularFireStorage,
-              private fb: FormBuilder) { }
+  // MAP
 
-  get nome(): any {
+  private map: any;
+  private marker: any;
+
+  constructor(
+    private toastController: ToastController,
+    private caseService: CaseService,
+    private afStore: AngularFireStorage,
+    private fb: FormBuilder,
+    private location: Location,
+    private datePipe: DatePipe,
+    private router: Router,
+    private element: ElementRef
+  ) {
+    const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
+    if (selectedCase) {
+      this.case = selectedCase;
+    }
+  }
+
+
+  get nome(): AbstractControl {
     return this.form.get('nome');
   }
 
-  get data(): any {
+  get data(): AbstractControl {
     return this.form.get('data');
   }
 
-  get contato(): any {
+  get contato(): AbstractControl {
     return this.form.get('contato');
   }
-  get local(): any {
-    return this.form.get('local');
+
+  get lat(): AbstractControl {
+    return this.form.get('lat');
   }
   async presentToast(position: 'middle') {
     const toast = await this.toastController.create({
       message: 'Concluido!',
       duration: 1500,
-      color:'success',
+      color: 'success',
       translucent: true,
-      position
+      position,
     });
 
     await toast.present();
   }
 
   ngOnInit() {
+    console.log("🚀 ~ file: add-case.page.ts:75 ~ AddCasePage ~ ngOnInit ~ ngOnInit:")
     this.form = this.fb.group({
-      nome: [this.case?.name, Validators.required],
-      data: [this.case?.datas, Validators.required],
-      suspeito: [this.case?.suspeito, Validators.required],
+      nome: [this.case?.nome, Validators.required],
+      data: [this.case?.data, Validators.required],
       contato: [this.case?.contato, Validators.required],
-      local: [this.case?.local, Validators.required],
-      photoURL: [this.case?.photoURL]
+      lat: [this.case?.lat, Validators.required],
+      lng: [this.case?.lng, Validators.required],
+      photoURL: [this.case?.photoURL],
     });
   }
 
-  openImagePicker(event: any) {
-    if(event.target.files[0]) {
-      this.afStore.upload(nanoid(), event.target.files[0]).then(res => {
-        res.ref.getDownloadURL().then(URL => {
-          this.form.get('photoURL').setValue(URL);
-        })
+  setDate(event: any) {
+    this.data.patchValue(event.detail.value);
+    this.data.updateValueAndValidity();
+  }
+
+  ionViewDidEnter() {
+    this.case = history?.state?.case;
+    if(this.case) {
+      this.form.patchValue({
+        nome: this.case?.nome,
+        data: this.case?.data,
+        contato: this.case?.contato,
+        lat: this.case?.lat,
+        lng: this.case?.lng,
+        photoURL: this.case?.photoURL,
       })
+    }
+    let lat: number;
+    let lng: number;
+    if (!this.case) {
+      if (Capacitor.getPlatform() !== 'web') {
+        Geolocation.getCurrentPosition().then(
+          (pos) => {
+            lat = pos.coords.latitude;
+            lng = pos.coords.longitude;
+            this.intiMap(lat, lng);
+          },
+          (err) => {
+            this.intiMap(0, 0);
+          }
+        );
+      } else {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            lat = pos.coords.latitude;
+            lng = pos.coords.longitude;
+            this.intiMap(lat, lng);
+          },
+          (err) => {
+            this.intiMap(0, 0);
+          }
+        );
+      }
+    } else {
+      this.intiMap(this.lat.value, this.form.value.lng);
+      this.addMarker(this.lat.value, this.form.value.lng, true);
+    }
+  }
+
+  intiMap(lat: number, lng: number) {
+    this.map = L.map(!!this.case ? 'edit-map' : 'create-map').setView([lat || 0, lng || 0], 13);
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    });
+    tiles.addTo(this.map);
+    this.map.doubleClickZoom.disable();
+    this.map.on('dblclick', (e) => this.addMarker(e.latlng.lat, e.latlng.lng));
+  }
+
+  addMarker(lat: number, lng: number, firstCheck: boolean = false) {
+    if (!firstCheck && this.form.value.lat && this.form.value.lng) {
+      this.map.removeLayer(this.marker);
+    }
+    this.form.controls['lat'].setValue(lat);
+    this.form.controls['lng'].setValue(lng);
+    this.form.updateValueAndValidity();
+    const config = {
+      icon: L.icon({
+        iconSize: 25, //icon size [width.height]
+        iconUrl: '../../../../../assets/icon/pin.png',
+      }),
+    };
+    this.marker = L.marker([lat, lng], config).addTo(this.map);
+  }
+
+  openImagePicker(event: any) {
+    if (event.target.files[0]) {
+      this.afStore.upload(nanoid(), event.target.files[0]).then((res) => {
+        console.log(
+          '🚀 ~ file: add-case.page.ts:120 ~ AddCasePage ~ this.afStore.upload ~ res:',
+          res
+        );
+        res.ref.getDownloadURL().then((URL) => {
+          this.form.get('photoURL').setValue(URL);
+        });
+      });
     }
   }
 
   submit() {
     if (this.form.valid) {
-      if(this.case) {
-        console.log('A');
-        this.caseService.update(
-          this.case._id,
-          this.form.get('nome').value,
-          this.form.get('data').value,
-          this.form.get('suspeito').value,
-          this.form.get('contato').value,
-          this.form.get('local').value,
-          this.form.get('photoURL').value
-        ).then(() => {
+      if (this.case) {
+        this.caseService.update(this.case._id, this.form.value).then(() => {
           this.presentToast('middle');
         });
       } else {
-        console.log('B');
-        this.caseService.create(
-          this.form.get('nome').value,
-          this.form.get('data').value,
-          this.form.get('suspeito').value,
-          this.form.get('contato').value,
-          this.form.get('local').value,
-          this.form.get('photoURL').value
-        ).then(() => {
+        this.caseService.create(this.form.value).then(() => {
           this.form.reset();
           this.presentToast('middle');
         });
@@ -99,4 +185,13 @@ export class AddCasePage implements OnInit {
     }
   }
 
+  goToHome() {
+    this.router.navigate(['/home']);
+  }
+
+  ionViewDidLeave() {
+    this.element.nativeElement.remove();
+    this.location.replaceState('');
+    this.map.remove();
+  }
 }

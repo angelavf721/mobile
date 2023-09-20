@@ -42,13 +42,16 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
-
+    gap: 0.5rem;
 
     ion-label {
       font-size: 1.3rem;
     }
 
+    #edit-map, #create-map {
+      width: 100%;
+      height: 300px;
+    }
   }
 
 }

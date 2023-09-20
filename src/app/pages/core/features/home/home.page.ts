@@ -5,8 +5,7 @@ import {Storage} from '@ionic/storage-angular';
 import {User} from '../../../../../utils/models/user.model';
 import {AngularFireDatabase} from '@angular/fire/compat/database';
 import {CasePage} from './case/case.page';
-import {AddCasePage} from "../add-case/add-case.page";
-import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 
 
 
@@ -22,31 +21,31 @@ export class HomePage implements OnInit {
   user: User;
   loading = true;
   searchedItems: any[] = [];
-
+  savedCasesList: any[] = [];
 
   @Input() case: any;
   constructor(private modalController: ModalController,
               private authService: AuthService,
-              private alertController: AlertController,
               private db: AngularFireDatabase,
               private storage: Storage) {
-
-    db.list('Casos/').valueChanges().subscribe(res => {
-      this.items = res;
-      this.searchedItems = res;
-      // this.listItems = res;
-      this.loading = false;
-
-    });
   }
-
 
   ngOnInit() {
     console.log('#HOMEPAGE');
-    console.log();
+    this.db.list('Casos/').valueChanges().subscribe(res => {
+      this.items = res;
+      this.searchedItems = res;
+      this.loadUser();
+    });
+  }
+
+  loadUser() {
     this.storage.get('User').then(user => {
       this.user = user;
       console.log(this.user);
+      this.savedCasesList = this.items.filter(i => this.user.savedCasesId?.includes(i._id));
+      console.log(this.savedCasesList);
+      this.loading = false;
     });
   }
 
@@ -61,13 +60,31 @@ export class HomePage implements OnInit {
     await modal.present();
   }
 
+  addLista(id: string){
+    const userHasId: boolean = !!this.user.savedCasesId?.find(savedId => savedId === id);
+    if(userHasId) {
+      this.user.savedCasesId = this.user.savedCasesId?.filter(savedId => savedId !== id);
+    } else {
+      if(!this.user.savedCasesId?.length) {
+        this.user.savedCasesId = [];
+        this.user.savedCasesId.push(id);
+      } else {
+        this.user.savedCasesId.push(id);
+      }
+    }
+    this.authService.updateUser(this.user._id, {...this.user}).then(() => this.loadUser());
+  }
 
   search(event: any) {
-    console.log("🚀 -> search -> event", event.detail.value);
-    this.searchedItems = this.items.filter(item => (item.name as string).includes(event.detail.value));
+    this.searchedItems = this.items.filter(item => (item.nome as string).includes(event.detail.value));
   }
-  // list(event: any){
-  //   this.listItems = this.items.co;
-  // }
+
+  caseIsSaved(caseId: string): boolean {
+    return this.user.savedCasesId?.includes(caseId);
+  }
+
+  async sair(){
+    this.authService.logout();
+  }
 
 }

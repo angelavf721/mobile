@@ -1,7 +1,10 @@
 import { AddCasePage } from "./../../add-case/add-case.page";
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController} from '@ionic/angular';
+import {AlertController, ModalController} from '@ionic/angular';
 import {CaseService} from '../../../../../services/cases/case.service';
+import {User} from "../../../../../../utils/models/user.model";
+import {Storage} from "@ionic/storage-angular";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-case',
@@ -9,33 +12,59 @@ import {CaseService} from '../../../../../services/cases/case.service';
   styleUrls: ['./case.page.scss'],
 })
 export class CasePage implements OnInit {
-
+  handlerMessage = '';
+  roleMessage = '';
   @Input() case: any;
+  user: User;
 
   constructor(private modalController: ModalController,
-              private caseService: CaseService) {
+              private storage: Storage,
+              private caseService: CaseService,
+              private alertController: AlertController,
+              private router: Router) {
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Deseja realmente excluir o caso?',
+      buttons: [
+        {
+          text: 'Não',
+          role: 'cancel',
+          handler: () => {
+            this.handlerMessage = 'Alert canceled';
+          },
+        },
+        {
+          text: 'Sim',
+          role: 'confirm',
+          handler: () => {
+            this.caseService.delete(this.case._id).then(() => this.close());
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   ngOnInit() {
-    console.log(this.case);
+    this.storage.get('User').then(user => {
+      this.user = user;
+    });
   }
 
   close() {
     return this.modalController.dismiss();
   }
 
-
   async editarCaso() {
-    const modal = await this.modalController.create({
-      component: AddCasePage,
-      componentProps: {
+    this.close();
+    this.router.navigate(['edit-case'], {
+      state: {
         case: this.case
       }
     });
-    await modal.present();
   }
 
-  async apagarCaso() {
-    this.caseService.delete(this.case._id).then(() => this.close());
-  }
+
 }
