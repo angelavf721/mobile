@@ -76,7 +76,7 @@ export class HomePage implements OnInit {
   }
 
   search(event: any) {
-    this.searchedItems = this.items.filter(item => (item.name as string).includes(event.detail.value));
+    this.searchedItems = this.items.filter(item => (item.nome as string).includes(event.detail.value));
   }
 
   caseIsSaved(caseId: string): boolean {
