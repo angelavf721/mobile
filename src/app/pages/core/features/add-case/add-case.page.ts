@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ModalController, ToastController } from '@ionic/angular';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
+import { Geolocation } from '@capacitor/geolocation';
+import { ToastController } from '@ionic/angular';
+import * as L from 'leaflet';
 import { nanoid } from 'nanoid';
 import { CaseService } from '../../../../services/cases/case.service';
-import * as L from 'leaflet';
-import { ActivatedRoute, Router } from '@angular/router';
+import { DatePipe, Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-case',
   templateUrl: './add-case.page.html',
   styleUrls: ['./add-case.page.scss'],
+  providers: [DatePipe],
 })
 export class AddCasePage implements OnInit {
   date: string;
@@ -27,13 +31,20 @@ export class AddCasePage implements OnInit {
     private caseService: CaseService,
     private afStore: AngularFireStorage,
     private fb: FormBuilder,
-    private router: Router
+    private location: Location,
+    private datePipe: DatePipe,
+    private router: Router,
+    private element: ElementRef
   ) {
     const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
-    if(selectedCase) {
-      this.case = selectedCase
+    if (selectedCase) {
+      this.case = {
+        ...selectedCase,
+        data: this.datePipe.transform(selectedCase.data, 'dd/MM/yyyy'),
+      };
     }
   }
+
 
   get nome(): AbstractControl {
     return this.form.get('nome');
@@ -63,6 +74,7 @@ export class AddCasePage implements OnInit {
   }
 
   ngOnInit() {
+    console.log("🚀 ~ file: add-case.page.ts:75 ~ AddCasePage ~ ngOnInit ~ ngOnInit:")
     this.form = this.fb.group({
       nome: [this.case?.nome, Validators.required],
       data: [this.case?.data, Validators.required],
@@ -75,19 +87,44 @@ export class AddCasePage implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.case = history?.state?.case;
+    if(this.case) {
+      this.form.patchValue({
+        nome: this.case?.nome,
+        data: this.case?.data,
+        suspeito: this.case?.suspeito,
+        contato: this.case?.contato,
+        lat: this.case?.lat,
+        lng: this.case?.lng,
+        photoURL: this.case?.photoURL,
+      })
+    }
     let lat: number;
     let lng: number;
-    if(!this.case) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          lat = pos.coords.latitude;
-          lng = pos.coords.longitude;
-          this.intiMap(lat, lng);
-        },
-        (err) => {
-          this.intiMap(0, 0);
-        }
-      );
+    if (!this.case) {
+      if (Capacitor.getPlatform() !== 'web') {
+        Geolocation.getCurrentPosition().then(
+          (pos) => {
+            lat = pos.coords.latitude;
+            lng = pos.coords.longitude;
+            this.intiMap(lat, lng);
+          },
+          (err) => {
+            this.intiMap(0, 0);
+          }
+        );
+      } else {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            lat = pos.coords.latitude;
+            lng = pos.coords.longitude;
+            this.intiMap(lat, lng);
+          },
+          (err) => {
+            this.intiMap(0, 0);
+          }
+        );
+      }
     } else {
       this.intiMap(this.lat.value, this.form.value.lng);
       this.addMarker(this.lat.value, this.form.value.lng, true);
@@ -111,17 +148,32 @@ export class AddCasePage implements OnInit {
     this.form.controls['lat'].setValue(lat);
     this.form.controls['lng'].setValue(lng);
     this.form.updateValueAndValidity();
-    this.marker = L.marker([lat, lng]).addTo(this.map);
+    const config = {
+      icon: L.icon({
+        iconSize: 25, //icon size [width.height]
+        iconUrl: '../../../../../assets/icon/pin.png',
+      }),
+    };
+    this.marker = L.marker([lat, lng], config).addTo(this.map);
   }
 
   openImagePicker(event: any) {
     if (event.target.files[0]) {
       this.afStore.upload(nanoid(), event.target.files[0]).then((res) => {
+        console.log(
+          '🚀 ~ file: add-case.page.ts:120 ~ AddCasePage ~ this.afStore.upload ~ res:',
+          res
+        );
         res.ref.getDownloadURL().then((URL) => {
           this.form.get('photoURL').setValue(URL);
         });
       });
     }
+  }
+
+  updateData() {
+    this.data.patchValue(this.date);
+    this.data.updateValueAndValidity();
   }
 
   submit() {
@@ -144,7 +196,8 @@ export class AddCasePage implements OnInit {
   }
 
   ionViewDidLeave() {
+    this.element.nativeElement.remove();
+    this.location.replaceState('');
     this.map.remove();
   }
-
 }

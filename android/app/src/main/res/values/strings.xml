@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">HR</string>
-    <string name="title_activity_main">HR</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Alerta Amber</string>
+    <string name="title_activity_main">Alerta Amber</string>
+    <string name="package_name">app.alerta_amber</string>
+    <string name="custom_url_scheme">app.alerta_amber</string>
 </resources>

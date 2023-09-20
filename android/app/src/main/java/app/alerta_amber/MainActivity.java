@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package app.alerta_amber;
 
 import com.getcapacitor.BridgeActivity;
 

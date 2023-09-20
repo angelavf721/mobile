@@ -13,8 +13,9 @@
         <input
           (change)="openImagePicker($event)"
           type="file"
-          accept="image/png, image/gif, image/jpeg" />
-        <img [src]="form.value.photoURL || '../../../../../assets/icon/user_add_21977%20(1).png'" />
+          accept="image/*" />
+        <img
+          [src]="form?.value.photoURL || '../../../../../assets/icon/user_add_21977%20(1).png'" />
       </div>
 
       <div class="card-content">
@@ -29,7 +30,7 @@
         <div class="validation-errors">
           <div
             class="error-message"
-            *ngIf="nome.errors && nome.dirty || nome.touched && nome.invalid">
+            *ngIf="nome?.errors && nome?.dirty || nome?.touched && nome?.invalid">
             Nome Obrigatorio
           </div>
         </div>
@@ -39,8 +40,7 @@
             formControlName="data"
             placeholder="Dia/Mês/Ano"
             value="{{ date | date: 'dd/MM/yyyy' }}"
-            id="date"
-            class="ion-text-end">
+            id="date">
             Data do Desparecimento
           </ion-input>
           <ion-popover
@@ -52,6 +52,7 @@
                 locale="pt-BR-u-hc-h12"
                 presentation="date"
                 [(ngModel)]="date"
+                (ngModelChange)="updateData()"
                 [ngModelOptions]="{standalone: true}"
                 [showDefaultButtons]="true"
                 doneText="Confirmar"
@@ -63,7 +64,7 @@
         <div class="validation-errors">
           <div
             class="error-message"
-            *ngIf="data.errors && data.dirty || data.touched && data.invalid">
+            *ngIf="data?.errors && data?.dirty || data?.touched && data?.invalid">
             Data é Obrigatorio
           </div>
         </div>
@@ -86,13 +87,13 @@
         <div class="validation-errors">
           <div
             class="error-message"
-            *ngIf="contato.errors && contato.dirty || contato.touched && contato.invalid">
+            *ngIf="contato?.errors && contato?.dirty || contato?.touched && contato?.invalid">
             Contato é Obrigatorio
           </div>
           <div class="validation-errors">
             <div
               class="error-message"
-              *ngIf="lat.errors && lat.dirty || lat.touched && lat.invalid">
+              *ngIf="lat?.errors && lat?.dirty || lat?.touched && lat?.invalid">
               local é Obrigatorio
             </div>
           </div>
@@ -110,7 +111,6 @@
         Cancelar
       </ion-button>
       <ion-button
-        [disabled]="form.invalid"
         expand="block"
         (click)="submit()"
         color="primary">
