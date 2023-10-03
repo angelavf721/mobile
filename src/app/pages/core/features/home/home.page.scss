@@ -12,25 +12,17 @@
 
   .option {
     font-size: 1.5rem;
-    padding: 5px;
+    padding: 0.5rem 0.8rem;
     display: flex;
     align-items: center;
     border-radius: 8px;
+    margin-top: 0.5rem;
 
     ion-badge {
       font-size: 7px;
       position: absolute;
       top: 0;
       right: 5px;
-    }
-    .salve-button:hover{
-      //background-color: #da0000; // set a background color
-      color: #e51212; // set the icon color
-
-      //ionicon-fill-none {
-      //
-      //}
-
     }
   }
 }

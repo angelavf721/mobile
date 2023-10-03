@@ -13,12 +13,12 @@
   <ion-card>
     <div class="card">
       <div class="img-card">
-        <img [src]="case.photoURL || '../../../../../assets/fotosKids/avatar.jpg'" />
+        <img [src]="case.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'" />
       </div>
       <div class="card-header">
         <span> {{ case.nome }} </span>
         <div
-          *ngIf="case.ownerID === user?._id"
+          *ngIf="case.userID === user?._id"
           class="options">
           <div class="option ion-activatable ripple-parent">
             <ion-icon

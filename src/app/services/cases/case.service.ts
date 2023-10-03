@@ -12,7 +12,7 @@ interface Case {
   contato: number;
   lat: number;
   lng: number;
-  photoURL: string;
+  imagemUrl: string;
 }
 
 @Injectable({
@@ -35,7 +35,7 @@ export class CaseService {
     const ref = this.db.database.ref('Casos/').push();
     const key = ref.key;
     return ref.set({
-      ownerID: this.user._id,
+      userID: this.user._id,
       _id: key,
       ...body
     }).then(() => this.router.navigate(['/home']));

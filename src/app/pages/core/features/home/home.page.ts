@@ -19,6 +19,7 @@ export class HomePage implements OnInit {
   leaveAnimation: any;
   items: any[] = [];
   user: User;
+  usersToShare: User[] = [];
   loading = true;
   searchedItems: any[] = [];
   savedCasesList: any[] = [];
@@ -73,6 +74,17 @@ export class HomePage implements OnInit {
       }
     }
     this.authService.updateUser(this.user._id, {...this.user}).then(() => this.loadUser());
+  }
+
+  searchUser(event: any): void {
+    this.usersToShare = [];
+    this.db.database.ref('Users/').get().then(res => {
+      res.forEach((data) => {
+        if(event.detail.value && data.val().name.includes(event.detail.value) || event.detail.value && data.val().email.includes(event.detail.value)) {
+          this.usersToShare.push(data.val());
+        }
+      });
+    })
   }
 
   search(event: any) {

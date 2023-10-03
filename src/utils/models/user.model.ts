@@ -2,7 +2,9 @@ export class User {
   _id: string;
   name: string;
   email: string;
-  photoURL: string;
+  imagemUrl: string;
   phoneNumber: string;
   savedCasesId?: string[];
+  userMobileTokenKey?: string;
+  notifications?: Notification[]
 }

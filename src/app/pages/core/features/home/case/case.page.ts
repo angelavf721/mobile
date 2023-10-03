@@ -1,4 +1,3 @@
-import { AddCasePage } from "./../../add-case/add-case.page";
 import {Component, Input, OnInit} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {CaseService} from '../../../../../services/cases/case.service';

@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire/compat';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { AngularFireStorageModule, BUCKET } from '@angular/fire/compat/storage';
+import { HttpClientModule } from  '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +17,7 @@ import { AngularFireStorageModule, BUCKET } from '@angular/fire/compat/storage';
     BrowserModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
+    HttpClientModule,
     AngularFireModule.initializeApp({
       apiKey: 'AIzaSyD7M-YoCTL1Qns--qlPeu0icxlqLeyuTcM',
       authDomain: 'bd-amber.firebaseapp.com',

@@ -9,12 +9,12 @@ import * as L from 'leaflet';
 import { nanoid } from 'nanoid';
 import { CaseService } from '../../../../services/cases/case.service';
 import { DatePipe, Location } from '@angular/common';
+import { FcmService } from 'src/app/services/push-notifications/fmc.service';
 
 @Component({
   selector: 'app-add-case',
   templateUrl: './add-case.page.html',
   styleUrls: ['./add-case.page.scss'],
-  providers: [DatePipe],
 })
 export class AddCasePage implements OnInit {
   form: FormGroup;
@@ -31,9 +31,9 @@ export class AddCasePage implements OnInit {
     private afStore: AngularFireStorage,
     private fb: FormBuilder,
     private location: Location,
-    private datePipe: DatePipe,
     private router: Router,
-    private element: ElementRef
+    private element: ElementRef,
+    private fcmServeice: FcmService
   ) {
     const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
     if (selectedCase) {
@@ -77,7 +77,7 @@ export class AddCasePage implements OnInit {
       contato: [this.case?.contato, Validators.required],
       lat: [this.case?.lat, Validators.required],
       lng: [this.case?.lng, Validators.required],
-      photoURL: [this.case?.photoURL],
+      imagemUrl: [this.case?.imagemUrl],
     });
   }
 
@@ -95,7 +95,7 @@ export class AddCasePage implements OnInit {
         contato: this.case?.contato,
         lat: this.case?.lat,
         lng: this.case?.lng,
-        photoURL: this.case?.photoURL,
+        imagemUrl: this.case?.imagemUrl,
       })
     }
     let lat: number;
@@ -164,7 +164,7 @@ export class AddCasePage implements OnInit {
           res
         );
         res.ref.getDownloadURL().then((URL) => {
-          this.form.get('photoURL').setValue(URL);
+          this.form.get('imagemUrl').setValue(URL);
         });
       });
     }
@@ -178,6 +178,7 @@ export class AddCasePage implements OnInit {
         });
       } else {
         this.caseService.create(this.form.value).then(() => {
+          this.fcmServeice.enviarNotificacao(`Novo caso`, this.form.value.nome, this.form.value.imagemUrl);
           this.form.reset();
           this.presentToast('middle');
         });

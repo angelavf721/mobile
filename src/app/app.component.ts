@@ -9,7 +9,7 @@ import { Platform } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private storage: Storage, private fcmService: FcmService,
+  constructor(private storage: Storage,
     private platform: Platform) {
     console.log('#AppComponent');
     console.log('#AppComponent2');
@@ -19,8 +19,5 @@ export class AppComponent {
 
   initializeApp() {
     console.log("🚀 ~ file: app.component.ts:20 ~ AppComponent ~ initializeApp ~ initializeApp:")
-    this.platform.ready().then(() => {
-      this.fcmService.initPush();
-    });
   }
 }

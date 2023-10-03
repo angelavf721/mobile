@@ -50,7 +50,7 @@ export class UpdateCasePage implements OnInit {
       data: [this.case.datas, Validators.required],
       suspeito: [this.case.suspeito, Validators.required],
       contato: [this.case.contato, Validators.required],
-      photoURL: [this.case.photoURL]
+      imagemUrl: [this.case.imagemUrl]
     });
     console.log(this.form.value);
   }
@@ -59,7 +59,7 @@ export class UpdateCasePage implements OnInit {
     if(event.target.files[0]) {
       this.afStore.upload(nanoid(), event.target.files[0]).then(res => {
         res.ref.getDownloadURL().then(URL => {
-          this.form.get('photoURL').setValue(URL);
+          this.form.get('imagemUrl').setValue(URL);
         })
       })
     }

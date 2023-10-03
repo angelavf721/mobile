@@ -32,8 +32,9 @@
           <input
             (change)="openImagePicker($event)"
             type="file"
-            accept="image/png, image/gif, image/jpeg">
-          <img [src]="form.value.photoURL || '../../../../../assets/icon/user_add_21977%20(1).png'">
+            accept="image/png, image/gif, image/jpeg" />
+          <img
+            [src]="form.value.imagemUrl || '../../../../../assets/icon/user_add_21977%20(1).png'" />
         </div>
 
         <div class="card-content">
@@ -89,7 +90,6 @@
           </ion-item>
           <div class="validation-errors">
             <!-- <div class="error-message">Contato é Obrigatorio</div> -->
-
           </div>
         </div>
       </div>
