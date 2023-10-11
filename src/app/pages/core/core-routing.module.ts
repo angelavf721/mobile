@@ -6,10 +6,13 @@ import {CorePage} from './core.page';
 const routes: Routes = [
   {
     path: '',
-    component: CorePage,
     children: [
       {
         path: 'home',
+        loadChildren: () => import('./features/home/home.module').then(m => m.HomePageModule)
+      },
+      {
+        path: 'home/:caseID',
         loadChildren: () => import('./features/home/home.module').then(m => m.HomePageModule)
       },
       {

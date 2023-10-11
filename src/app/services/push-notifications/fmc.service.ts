@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Plugins, Capacitor } from '@capacitor/core';
-import { Router } from '@angular/router';
-import { PushNotifications } from '@capacitor/push-notifications';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Storage } from '@ionic/storage-angular';
+import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, NgZone } from '@angular/core';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
+import { PushNotifications } from '@capacitor/push-notifications';
+import { Storage } from '@ionic/storage-angular';
+import { nanoid } from 'nanoid';
+import { Notification } from 'src/utils/models/notification.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +16,10 @@ export class FcmService {
   constructor(
     private router: Router,
     private db: AngularFireDatabase,
-    private auth: AngularFireAuth,
     private storage: Storage,
-    private http: HttpClient
+    private http: HttpClient,
+    private zone: NgZone,
+    private location: Location
   ) {}
 
   initPush() {
@@ -27,21 +30,41 @@ export class FcmService {
 
   private registerPush() {
     const addListeners = async () => {
-      const user = await this.storage.get('User');
-      await PushNotifications.addListener('registration', (token) => {
-        console.info('Registration token: ', token.value);
-        const tokenDbRef = this.db.database.ref('TokensToNotify/');
-        tokenDbRef.get().then((res) => {
-          const tokens = res.val();
-          console.log(tokens);
-          if (!tokens || tokens.length === 0) {
-            tokenDbRef.set([token.value]);
-          }
-          if (!tokens.includes(user.userMobileTokenKey)) {
-            tokenDbRef.set([...tokens, token.value]);
-            this.addTokenToUser(token.value);
-          }
-        });
+      this.storage.get('User').then((u) => {
+        this.db.database
+          .ref('Users/' + u._id)
+          .get()
+          .then(async (res) => {
+            const user = res.val();
+            await PushNotifications.addListener('registration', (token) => {
+              console.info('Registration token: ', token.value);
+              const tokenDbRef = this.db.database.ref('TokensToNotify/');
+              tokenDbRef.get().then((res) => {
+                const tokens = res.val();
+                console.log(tokens);
+                if (!tokens || tokens.length === 0) {
+                  console.log(1);
+                  tokenDbRef.set([token.value]);
+                  this.addTokenToUser(token.value);
+                }
+                if (tokens && !user?.userMobileTokenKey) {
+                  console.log(2);
+                  tokenDbRef.set([...tokens, token.value]);
+                  this.addTokenToUser(token.value);
+                }
+                if (
+                  tokens &&
+                  user?.userMobileTokenKey &&
+                  !tokens.includes(user.userMobileTokenKey)
+                ) {
+                  console.log(3);
+                  tokenDbRef.set([...tokens, token.value]);
+                  this.addTokenToUser(token.value);
+                }
+              });
+              this.storage.set('User', { ...user, userMobileTokenKey: token });
+            });
+          });
       });
 
       await PushNotifications.addListener('registrationError', (err) => {
@@ -49,16 +72,36 @@ export class FcmService {
       });
 
       await PushNotifications.addListener('pushNotificationReceived', (notification) => {
-        console.log('Push notification received: ', notification);
+        this.storage.get('User').then(async (user) => {
+          const UserDbRef = this.db.database.ref('Users/' + user._id);
+          const userDB = (await UserDbRef.get()).val();
+          if (userDB.notifications) {
+            UserDbRef.update({
+              ...user,
+              notifications: [
+                ...userDB.notifications,
+                { ...JSON.parse(notification.data.notification), _id: nanoid() },
+              ],
+            });
+          } else {
+            UserDbRef.update({
+              ...user,
+              notifications: [{ ...JSON.parse(notification.data.notification), _id: nanoid() }],
+            });
+          }
+        });
       });
 
-      await PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+      await PushNotifications.addListener('pushNotificationActionPerformed', (res) => {
+        console.log('Push notification action performed', res.actionId, res.inputValue);
+        const notificacao = JSON.parse(res.notification.data.notification) as Notification;
         console.log(
-          'Push notification action performed',
-          notification.actionId,
-          notification.inputValue
+          '🚀 ~ file: fmc.service.ts:77 ~ FcmService ~ awaitPushNotifications.addListener ~ notificacao:',
+          notificacao
         );
-        console.log(notification);
+        this.zone.run(() => {
+          this.router.navigate(['/home'], { queryParams: { caseID: notificacao.path } })
+        });
       });
     };
 
@@ -76,22 +119,26 @@ export class FcmService {
       await PushNotifications.register();
     };
 
-    const getDeliveredNotifications = async () => {
-      const notificationList = await PushNotifications.getDeliveredNotifications();
-      console.log('delivered notifications', notificationList);
-    };
     addListeners();
     registerNotifications();
-    getDeliveredNotifications();
+    this.getDeliveredNotifications();
+  }
+
+  async getDeliveredNotifications() {
+    // const notificationList = await PushNotifications.getDeliveredNotifications();
+    // console.log('delivered notifications', notificationList);
+    // PushNotifications.removeAllDeliveredNotifications();
   }
 
   addTokenToUser(token: string) {
     this.storage.get('User').then((user) => {
       this.db.database.ref('Users/' + user._id).update({ ...user, userMobileTokenKey: token });
+      this.storage.set('User', { ...user, userMobileTokenKey: token });
     });
   }
 
-  enviarNotificacao(title: string, ntfbody: string, image?: string) {
+  enviarNotificacao(title: string, ntfbody: string, image?: string, path?: string, sendToTokens?: string[]) {
+    console.log("🚀 ~ file: fmc.service.ts:142 ~ FcmService ~ enviarNotificacao ~ enviarNotificacao:")
     this.storage.get('User').then((user) => {
       const tokenDbRef = this.db.database.ref('TokensToNotify/');
       const body = {
@@ -100,13 +147,21 @@ export class FcmService {
           title: title,
           body: ntfbody,
         },
+        data: {
+          notification: {
+            mensagem: ntfbody,
+            imagemUrl: image,
+            path: path,
+          } as Partial<Notification>,
+        },
       };
-      if(image) {
+      if (image) {
         body.notification['image'] = image;
       }
       tokenDbRef.get().then((res) => {
         const tokens = res.val().filter((token) => token !== user.userMobileTokenKey);
-        body.registration_ids = tokens;
+        body.registration_ids = sendToTokens || tokens;
+        console.log(body);
         this.http
           .post('https://fcm.googleapis.com/fcm/send', body, {
             headers: {

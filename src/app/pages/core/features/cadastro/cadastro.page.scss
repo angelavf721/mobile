@@ -1,58 +1,39 @@
-.contener {
-  margin-top: 5rem;
-  align-items: center;
-}
-
-.header {
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10rem;
-  color: black;
-}
-
-.card{
-  font-size: 1rem;
-  padding: 1rem;
+.cadastro-content {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
-  //margin-top: 10rem;
-  color:black;
+  gap: 1rem;
+  height: 100%;
 
+  .cadastro-header {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: center;
+    .title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  }
 
+  form {
+    padding: 0 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+
+    .buttons {
+      margin-top: 2rem;
+    }
+  }
 }
 
-
-.tags {
-  margin-top: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: black;
+.error-message {
+  padding: 0 1rem;
+  color: var(--ion-color-danger);
 }
 
 ion-icon {
-  color: black;
-}
-
-.card-buttons {
-  display: flex;
-  margin: 5px;
-  padding: 1rem;
-  flex-direction: column;
-}
-.validation-errors {
-  font-size: small;
-  color: var(--ion-color-danger, #f1453d);
-}
-
-/* These are necessary to make the underline red */
-ion-item.invalid {
-  --highlight-background: var(--ion-color-danger, #f1453d);
-}
-
-ion-item {
-  --highlight-color-invalid: var(--ion-color-primary);
+  margin-right: 0.5rem;
 }

@@ -70,13 +70,13 @@
           <ion-input
             required
             type="number"
-            formControlName="contato"
+            formControlName="contatos"
             placeholder="número para informações"></ion-input>
         </ion-item>
         <div class="validation-errors">
           <div
             class="error-message"
-            *ngIf="contato?.errors && contato?.dirty || contato?.touched && contato?.invalid">
+            *ngIf="contatos?.errors && contatos?.dirty || contatos?.touched && contatos?.invalid">
             Contato é Obrigatorio
           </div>
           <div class="validation-errors">

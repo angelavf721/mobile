@@ -4,12 +4,13 @@ import {Storage} from '@ionic/storage-angular';
 import {Router} from '@angular/router';
 import { User } from '../../../utils/models/user.model';
 import { ModalController } from '@ionic/angular';
+import { FcmService } from '../push-notifications/fmc.service';
 
 interface Case {
   nome: string;
   data: string;
   suspeito: string;
-  contato: number;
+  contatos: number;
   lat: number;
   lng: number;
   imagemUrl: string;
@@ -24,7 +25,8 @@ export class CaseService {
 
   constructor(private db: AngularFireDatabase,
               private storage: Storage,
-              private router: Router) {
+              private router: Router,
+              private fcmServeice: FcmService) {
     console.log('#UpadatePage');
     this.storage.get('User').then(user => {
       this.user = user;
@@ -38,7 +40,10 @@ export class CaseService {
       userID: this.user._id,
       _id: key,
       ...body
-    }).then(() => this.router.navigate(['/home']));
+    }).then(() => {
+      this.router.navigate(['/home'])
+    this.fcmServeice.enviarNotificacao(`Novo caso - `, body.nome, body.imagemUrl, key);
+  });
   }
 
   update(caseID: string, body: Case) {

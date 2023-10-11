@@ -6,6 +6,7 @@ import { User } from '../../../utils/models/user.model';
 import { Storage } from '@ionic/storage-angular';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { FcmService } from '../push-notifications/fmc.service';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,8 @@ export class AuthService {
     private router: Router,
     private db: AngularFireDatabase,
     private storage: Storage,
-    private fcmService: FcmService
+    private fcmService: FcmService,
+    private toastController: ToastController
   ) {}
 
   createUserWithEmailAndPassword(email: string, password: string, name: string, telefone: string) {
@@ -27,12 +29,23 @@ export class AuthService {
         email: res.user.email,
         imagemUrl: res.user.photoURL,
         phoneNumber: telefone,
+        savedCasesId: []
       };
       this.db.database.ref('Users/' + res.user.uid).set(userToSave);
       this.saveUserOnStorage(userToSave).then(() => {
         this.router.navigate(['/home']);
         this.fcmService.initPush();
       });
+    }).catch(async (error) => {
+      if(error.code === 'auth/email-already-in-use') {
+        const toast = await this.toastController.create({
+          message: 'Já existe um usuário com esse e-mail.',
+          duration: 1500,
+          position: 'top',
+          color: 'danger',
+        });
+        await toast.present();
+      }
     });
   }
 
@@ -57,8 +70,28 @@ export class AuthService {
             this.fcmService.initPush();
           });
         });
+    }).catch(async (error) => {
+      if(error.code === 'auth/user-not-found') {
+        const toast = await this.toastController.create({
+          message: 'Não existe usuário com esse e-mail.',
+          duration: 1500,
+          position: 'top',
+          color: 'danger',
+        });
+        await toast.present();
+      }
+      if(error.code === 'auth/wrong-password') {
+        const toast = await this.toastController.create({
+          message: 'Senha incorreta.',
+          duration: 1500,
+          position: 'top',
+          color: 'warning',
+        });
+        await toast.present();
+      }
     });
   }
+
   logout() {
     this.auth
       .signOut()
@@ -77,7 +110,7 @@ export class AuthService {
   //     name: nome,
   //     datas: data,
   //     suspeitos: suspeito,
-  //     contato: telefone
+  //     contatos: telefone
   //   };
   //   this.db.database.ref('Casos/').push(caseSalve).then(res => {
   //     console.log(caseSalve);

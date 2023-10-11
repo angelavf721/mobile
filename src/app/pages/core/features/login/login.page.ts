@@ -31,10 +31,8 @@ export class LoginPage implements OnInit {
 
   login() {
     if (this.form.valid) {
-      console.log('LOGUEI');
       this.authService.loginWithEmail(this.form.get('email').value, this.form.get('senha').value);
     } else {
-      console.log('NAO LOGUEI', this.form);
       this.form.markAsTouched();
     }
   }

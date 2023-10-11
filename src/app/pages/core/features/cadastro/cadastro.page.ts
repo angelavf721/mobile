@@ -53,4 +53,8 @@ export class CadastroPage implements OnInit {
       );
     }
   }
+
+  ionViewDidLeave() {
+    this.form.reset();
+  }
 }

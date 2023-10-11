@@ -1,3 +1,5 @@
+import { Contato } from "./contato.model";
+
 export interface Case {
   _id: string;
   userID: string;
@@ -5,6 +7,6 @@ export interface Case {
   data: string;
   lat: string;
   lng: string;
-  contato: string;
+  contatos: Contato[];
   imagemUrl?: string;
 }

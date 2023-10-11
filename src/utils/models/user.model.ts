@@ -1,3 +1,4 @@
+import { Notification } from "./notification.model";
 export class User {
   _id: string;
   name: string;

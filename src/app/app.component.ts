@@ -10,7 +10,8 @@ import { Platform } from '@ionic/angular';
 })
 export class AppComponent {
   constructor(private storage: Storage,
-    private platform: Platform) {
+    private platform: Platform,
+    private fcm: FcmService) {
     console.log('#AppComponent');
     console.log('#AppComponent2');
     this.storage.create();

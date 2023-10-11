@@ -33,7 +33,7 @@ export class AddCasePage implements OnInit {
     private location: Location,
     private router: Router,
     private element: ElementRef,
-    private fcmServeice: FcmService
+
   ) {
     const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
     if (selectedCase) {
@@ -50,8 +50,8 @@ export class AddCasePage implements OnInit {
     return this.form.get('data');
   }
 
-  get contato(): AbstractControl {
-    return this.form.get('contato');
+  get contatos(): AbstractControl {
+    return this.form.get('contatos');
   }
 
   get lat(): AbstractControl {
@@ -74,7 +74,7 @@ export class AddCasePage implements OnInit {
     this.form = this.fb.group({
       nome: [this.case?.nome, Validators.required],
       data: [this.case?.data, Validators.required],
-      contato: [this.case?.contato, Validators.required],
+      contatos: [this.case?.contatos, Validators.required],
       lat: [this.case?.lat, Validators.required],
       lng: [this.case?.lng, Validators.required],
       imagemUrl: [this.case?.imagemUrl],
@@ -92,7 +92,7 @@ export class AddCasePage implements OnInit {
       this.form.patchValue({
         nome: this.case?.nome,
         data: this.case?.data,
-        contato: this.case?.contato,
+        contatos: this.case?.contatos,
         lat: this.case?.lat,
         lng: this.case?.lng,
         imagemUrl: this.case?.imagemUrl,
@@ -159,10 +159,6 @@ export class AddCasePage implements OnInit {
   openImagePicker(event: any) {
     if (event.target.files[0]) {
       this.afStore.upload(nanoid(), event.target.files[0]).then((res) => {
-        console.log(
-          '🚀 ~ file: add-case.page.ts:120 ~ AddCasePage ~ this.afStore.upload ~ res:',
-          res
-        );
         res.ref.getDownloadURL().then((URL) => {
           this.form.get('imagemUrl').setValue(URL);
         });
@@ -178,7 +174,6 @@ export class AddCasePage implements OnInit {
         });
       } else {
         this.caseService.create(this.form.value).then(() => {
-          this.fcmServeice.enviarNotificacao(`Novo caso`, this.form.value.nome, this.form.value.imagemUrl);
           this.form.reset();
           this.presentToast('middle');
         });

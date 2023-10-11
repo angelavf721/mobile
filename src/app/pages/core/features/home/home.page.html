@@ -1,11 +1,58 @@
-<ion-header translucent>
-  <ion-toolbar>
-    <div class="header">
-      <h4>Alerta Amber - {{ user?.name }}</h4>
+<ion-content>
+  <div class="home-content">
+    <div class="home-header">
+      <img [src]="user?.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'" />
+      <span class="user-name"> {{user?.name}} </span>
+
       <div class="options">
+        <div
+          class="option ion-activatable ripple-parent"
+          id="notifications-trigger">
+          <div
+            *ngIf="user?.notifications?.length"
+            class="badge">
+            {{user?.notifications?.length}}
+          </div>
+          <ion-icon name="notifications-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-popover trigger="notifications-trigger">
+            <ng-template>
+              <ion-content>
+                <ion-list
+                  class="notifications-list"
+                  *ngIf="user?.notifications?.length"
+                  [inset]="true">
+                  <ion-item
+                    (click)="openCaseInNotification(notification.path, i); popoverController.dismiss()"
+                    *ngFor="let notification of user?.notifications; let i = index">
+                    <ion-avatar slot="start">
+                      <img
+                        [src]="notification.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'" />
+                    </ion-avatar>
+                    <ion-label>
+                      <h2>{{ notification.mensagem }}</h2>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+                <span *ngIf="user?.notifications?.length">
+                  <ion-button
+                    (click)="clearAllNotifications()"
+                    class="clear-notifications"
+                    size="small"
+                    expand="block">
+                    Limpar
+                  </ion-button>
+                </span>
+                <span *ngIf="!user?.notifications?.length">
+                  <ion-item>Você não possui notificações.</ion-item>
+                </span>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </div>
+
         <div class="option ion-activatable ripple-parent">
           <ion-icon
-            expand="block"
             id="open-modal"
             name="search-outline"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
@@ -77,10 +124,42 @@
         </div>
       </div>
     </div>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content fullscreen>
+    <div class="home-body">
+      <div
+        *ngIf="items.length"
+        class="cases">
+        <span class="title-case"> Casos </span>
+        <div
+          *ngFor="let item of items"
+          class="case">
+          <img [src]="item.imagemUrl" />
+          <div class="info">
+            <span class="name">
+              <span>{{item.nome}}</span>
+              <ion-icon
+                (click)="addLista(item._id)"
+                [name]="!caseIsSaved(item._id) ? 'bookmark-outline' : 'bookmark'"
+                [ngStyle]="{'color': !caseIsSaved(item._id) ? 'black' : 'red' }"></ion-icon
+            ></span>
+            <span class="data">{{item.data | date: 'dd/MM/yyyy'}}</span>
+            <div
+              (click)="openCase(item)"
+              class="see-more">
+              Ver mais
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="!items.length"
+        class="empty-message">
+        <img src="../../../../../assets/images/404.svg" />
+        <span class="title">Nenhum caso registrado</span>
+        <span class="message"> Se desejar adicionar um caso clique no botão abaixo. </span>
+      </div>
+    </div>
+  </div>
+  <!-- <ion-content fullscreen>
   <div *ngIf="loading">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
@@ -150,7 +229,7 @@
 
           <div class="card-content">
             <label> Data do desaparecimento: {{ item.data | date: 'dd/MM/yyyy' }} </label>
-            <label> Enviar informações para: {{item.contato}} </label>
+            <label> Enviar informações para: {{item.contatos}} </label>
           </div>
         </div>
       </ion-card>
@@ -170,4 +249,14 @@
       </ion-card>
     </div>
   </div>
+</ion-content> -->
 </ion-content>
+
+<ion-fab
+  slot="fixed"
+  vertical="bottom"
+  horizontal="end">
+  <ion-fab-button [routerLink]="['/add-case']">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
