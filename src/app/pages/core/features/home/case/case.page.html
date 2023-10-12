@@ -1,19 +1,118 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="close()">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Desaparecido</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <div class="caso-content">
+    <div class="caso-header">
+      <ion-buttons slot="start">
+        <ion-button (click)="close()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Desaparecido</ion-title>
+      <div class="options">
+        <div
+          *ngIf="case?.userID === user?._id"
+          class="option ion-activatable ripple-parent">
+          <ion-icon
+            (click)="editarCaso()"
+            name="pencil-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+        <div
+          *ngIf="case?.userID === user?._id"
+          class="option ion-activatable ripple-parent">
+          <ion-icon
+            color="danger"
+            (click)="presentAlert()"
+            name="trash-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+        <div
+          id="open-share-with-user-modal"
+          class="option ion-activatable ripple-parent">
+          <ion-icon name="share-social-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-modal
+            [breakpoints]="[0, 0.25, 0.5, 0.75]"
+            [initialBreakpoint]="0.25"
+            #modal
+            trigger="open-share-with-user-modal">
+            <ng-template>
+              <ion-content>
+                <ion-searchbar
+                  (ionInput)="searchUser($event)"
+                  [debounce]="300"
+                  (click)="modal.setCurrentBreakpoint(0.75)"
+                  placeholder="Search"></ion-searchbar>
+                <ion-list>
+                  <ion-item *ngFor="let user of usersToShare">
+                    <ion-avatar slot="start">
+                      <ion-img src="https://i.pravatar.cc/300?u=b"></ion-img>
+                    </ion-avatar>
+                    <ion-label class="share-info">
+                      <div>
+                        <h2>{{user.name}}</h2>
+                        <p>{{user.email}}</p>
+                      </div>
+                      <div
+                        (click)="compartilhar(user)"
+                        class="share-button">
+                        <div
+                          class="send"
+                          *ngIf="!usuarioJaEstaSeleciondo(user._id)">
+                          Enviar
+                          <ion-icon name="paper-plane-outline"></ion-icon>
+                        </div>
+                        <div
+                          class="sent"
+                          *ngIf="usuarioJaEstaSeleciondo(user._id)">
+                          Enviado
+                        </div>
+                      </div>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </div>
+      </div>
+    </div>
+    <div class="caso-body">
+      <div
+        class="foto"
+        style="background-image: url({{case?.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'}})"></div>
+      <div class="info">
+        <span class="nome">{{case.nome}}</span>
+        <span class="data">{{case.data | date: 'dd/MM/yyyy' }}</span>
+        <div
+          *ngIf="case.contatos"
+          class="contatos">
+          <div
+            class="contato"
+            *ngFor="let contato of case.contatos; let i = index">
+            <ion-icon
+              name="call-outline"
+              size="large"
+              color="primary"></ion-icon>
+            <div>
+              <span class="contato-nome"> {{contato.nome}} </span>
+              <span class="tel"> {{contato.telefone}} </span>
+            </div>
+          </div>
+        </div>
+        <span class="ultimo-local">
+          <div id="mapa"></div>
+        </span>
+      </div>
+    </div>
+  </div>
+</ion-content>
 
+<!-- 
 <ion-content>
   <ion-card>
     <div class="card">
       <div class="img-card">
-        <img [src]="case?.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'" />
+        
       </div>
       <div class="card-header">
         <span> {{ case?.nome }} </span>
@@ -96,4 +195,4 @@
       </div>
     </div>
   </ion-card>
-</ion-content>
+</ion-content> -->

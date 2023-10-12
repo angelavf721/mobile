@@ -17,6 +17,7 @@ import { FcmService } from 'src/app/services/push-notifications/fmc.service';
   styleUrls: ['./add-case.page.scss'],
 })
 export class AddCasePage implements OnInit {
+  addContactForm: FormGroup;
   form: FormGroup;
   case: any;
 
@@ -32,15 +33,13 @@ export class AddCasePage implements OnInit {
     private fb: FormBuilder,
     private location: Location,
     private router: Router,
-    private element: ElementRef,
-
+    private element: ElementRef
   ) {
     const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
     if (selectedCase) {
       this.case = selectedCase;
     }
   }
-
 
   get nome(): AbstractControl {
     return this.form.get('nome');
@@ -70,14 +69,18 @@ export class AddCasePage implements OnInit {
   }
 
   ngOnInit() {
-    console.log("🚀 ~ file: add-case.page.ts:75 ~ AddCasePage ~ ngOnInit ~ ngOnInit:")
     this.form = this.fb.group({
       nome: [this.case?.nome, Validators.required],
       data: [this.case?.data, Validators.required],
       contatos: [this.case?.contatos, Validators.required],
       lat: [this.case?.lat, Validators.required],
       lng: [this.case?.lng, Validators.required],
-      imagemUrl: [this.case?.imagemUrl],
+      imagemUrl: [this.case?.imagemUrl, Validators.required],
+    });
+
+    this.addContactForm = this.fb.group({
+      nome: ['', Validators.required],
+      telefone: ['', Validators.required],
     });
   }
 
@@ -88,7 +91,7 @@ export class AddCasePage implements OnInit {
 
   ionViewDidEnter() {
     this.case = history?.state?.case;
-    if(this.case) {
+    if (this.case) {
       this.form.patchValue({
         nome: this.case?.nome,
         data: this.case?.data,
@@ -96,13 +99,13 @@ export class AddCasePage implements OnInit {
         lat: this.case?.lat,
         lng: this.case?.lng,
         imagemUrl: this.case?.imagemUrl,
-      })
+      });
     }
     let lat: number;
     let lng: number;
     if (!this.case) {
       if (Capacitor.getPlatform() !== 'web') {
-        Geolocation.getCurrentPosition().then(
+        Geolocation.getCurrentPosition({enableHighAccuracy: true}).then(
           (pos) => {
             lat = pos.coords.latitude;
             lng = pos.coords.longitude;
@@ -167,6 +170,7 @@ export class AddCasePage implements OnInit {
   }
 
   submit() {
+    this.form.markAllAsTouched();
     if (this.form.valid) {
       if (this.case) {
         this.caseService.update(this.case._id, this.form.value).then(() => {
@@ -189,5 +193,31 @@ export class AddCasePage implements OnInit {
     this.element.nativeElement.remove();
     this.location.replaceState('');
     this.map.remove();
+  }
+
+  addContact(modal: any) {
+    let value = this.form.value.contatos;
+    if (value) {
+      value.push({
+        _id: nanoid(),
+        ...this.addContactForm.value,
+      });
+    } else {
+      value = [
+        {
+          _id: nanoid(),
+          ...this.addContactForm.value,
+        },
+      ];
+    }
+    this.form.controls['contatos'].patchValue(value);
+    this.addContactForm.reset();
+    modal.dismiss();
+  }
+
+  removeContato(index: number) {
+    let value = this.form.value.contatos;
+    value.splice(index, 1)
+    this.form.controls['contatos'].patchValue(value);
   }
 }

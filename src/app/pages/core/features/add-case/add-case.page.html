@@ -1,12 +1,7 @@
-<ion-header>
-  <ion-toolbar>
-    <div class="header">
-      <h3>Alerta Amber</h3>
-    </div>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content fullscreen>
+  <div class="novo-caso-header">
+    <ion-title>{{this.case ? 'Editar Caso' : 'Novo Caso'}}</ion-title>
+  </div>
   <form [formGroup]="form">
     <div class="card">
       <div class="img-card">
@@ -65,34 +60,54 @@
             Data é Obrigatorio
           </div>
         </div>
-        <ion-item>
-          <ion-label position="stacked">Enviar informações para:</ion-label>
-          <ion-input
-            required
-            type="number"
-            formControlName="contatos"
-            placeholder="número para informações"></ion-input>
-        </ion-item>
+        <div class="contatos">
+          <span style="margin-bottom: 1rem">Enviar informações para:</span>
+          <div *ngIf="this.form.value.contatos">
+            <div
+              class="contato"
+              *ngFor="let contato of this.form.value.contatos; let i = index">
+              <ion-icon
+                name="call-outline"
+                size="large"
+                color="primary"></ion-icon>
+              <div>
+                <span class="nome"> {{contato.nome}} </span>
+                <span class="tel"> {{contato.telefone}} </span>
+              </div>
+              <ion-icon
+                (click)="removeContato(i)"
+                class="trash"
+                name="trash-outline"
+                size="large"
+                color="danger"></ion-icon>
+            </div>
+          </div>
+
+          <ion-button
+            expand="full"
+            fill="clear"
+            id="open-custom-dialog">
+            Acicionar contato
+          </ion-button>
+        </div>
         <div class="validation-errors">
           <div
             class="error-message"
             *ngIf="contatos?.errors && contatos?.dirty || contatos?.touched && contatos?.invalid">
             Contato é Obrigatorio
           </div>
-          <div class="validation-errors">
-            <div
-              class="error-message"
-              *ngIf="lat?.errors && lat?.dirty || lat?.touched && lat?.invalid">
-              local é Obrigatorio
-            </div>
-          </div>
         </div>
         <div [id]="!!case ? 'edit-map' : 'create-map'"></div>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="lat?.errors && lat?.dirty || lat?.touched && lat?.invalid">
+            local é Obrigatorio
+          </div>
+        </div>
       </div>
     </div>
-    <div
-      mode="ios"
-      class="card-buttons">
+    <div class="card-buttons">
       <ion-button
         #cancelButton
         (click)="goToHome()"
@@ -108,3 +123,46 @@
     </div>
   </form>
 </ion-content>
+
+<ion-modal
+  id="adicionar-contato"
+  #modal
+  trigger="open-custom-dialog">
+  <ng-template>
+    <div class="wrapper">
+      <h1>Adicionar contato</h1>
+      <form
+        [formGroup]="addContactForm"
+        class="add-contact-form">
+        <div class="inputs">
+          <ion-item>
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <ion-input
+              formControlName="nome"
+              placeholder="Nome"
+              type="text">
+            </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-icon name="call-outline"></ion-icon>
+            <ion-input
+              formControlName="telefone"
+              placeholder="Insira o telefone"
+              type="number">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="action-buttons">
+          <ion-button
+            [disabled]="addContactForm.invalid"
+            expand="block"
+            (click)="addContact(modal)"
+            color="primary">
+            Adicionar
+          </ion-button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</ion-modal>
