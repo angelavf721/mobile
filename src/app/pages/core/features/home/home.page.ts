@@ -34,6 +34,7 @@ export class HomePage implements OnInit {
     private authService: AuthService,
     private db: AngularFireDatabase,
     private storage: Storage,
+    private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -65,10 +66,6 @@ export class HomePage implements OnInit {
     });
   }
 
-  ionViewDidEnter() {
-    this.fcm.initPush();
-  }
-
   ngOnInit() {
     console.log('#HOMEPAGE');
     this.db
@@ -79,6 +76,7 @@ export class HomePage implements OnInit {
         this.searchedItems = res;
         this.loadUser();
       });
+      this.fcm.initPush();
   }
 
   loadUser() {
@@ -89,6 +87,7 @@ export class HomePage implements OnInit {
           console.log("🚀 ~ file: home.page.ts:89 ~ HomePage ~ .subscribe ~ res:", res)
           this.user = res as User;
           this.savedCasesList = this.items.filter(i => this.user.savedCasesId?.includes(i._id));
+          this.auth.saveUserOnStorage(this.user);
         });
       this.loading = false;
     });

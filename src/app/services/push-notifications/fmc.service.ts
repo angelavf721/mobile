@@ -41,7 +41,6 @@ export class FcmService {
               const tokenDbRef = this.db.database.ref('TokensToNotify/');
               tokenDbRef.get().then((res) => {
                 const tokens = res.val();
-                console.log(tokens);
                 if (!tokens || tokens.length === 0) {
                   console.log(1);
                   tokenDbRef.set([token.value]);
@@ -75,7 +74,7 @@ export class FcmService {
         this.storage.get('User').then(async (user) => {
           const UserDbRef = this.db.database.ref('Users/' + user._id);
           const userDB = (await UserDbRef.get()).val();
-          if (userDB.notifications) {
+          if (!!userDB.notifications) {
             UserDbRef.update({
               ...user,
               notifications: [
@@ -115,19 +114,12 @@ export class FcmService {
       if (permStatus.receive !== 'granted') {
         throw new Error('User denied permissions!');
       }
-
+      
       await PushNotifications.register();
+      addListeners();
     };
-
-    addListeners();
+    
     registerNotifications();
-    this.getDeliveredNotifications();
-  }
-
-  async getDeliveredNotifications() {
-    // const notificationList = await PushNotifications.getDeliveredNotifications();
-    // console.log('delivered notifications', notificationList);
-    // PushNotifications.removeAllDeliveredNotifications();
   }
 
   addTokenToUser(token: string) {
