@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import firebase from 'firebase/compat';
+import { GoogleAuthProvider } from "firebase/auth";
 import { Router } from '@angular/router';
 import { User } from '../../../utils/models/user.model';
 import { Storage } from '@ionic/storage-angular';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { FcmService } from '../push-notifications/fmc.service';
 import { ToastController } from '@ionic/angular';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +59,16 @@ export class AuthService {
       });
   }
 
+  updateUserPassword(password: string) {
+    return this.auth.currentUser.then(u => {
+      u.updatePassword(password);
+    });
+  }
+
+  recuperarSenha(email: string) {
+    return this.auth.sendPasswordResetEmail(email);
+  }
+
   loginWithEmail(email: string, password: string) {
     this.auth.signInWithEmailAndPassword(email, password).then((res) => {
       this.db.database
@@ -105,16 +116,37 @@ export class AuthService {
     return this.storage.set('User', user);
   }
 
-  // creat(nome: string, data: string, suspeito: string, telefone: string) {
-  //   const caseSalve = {
-  //     name: nome,
-  //     datas: data,
-  //     suspeitos: suspeito,
-  //     contatos: telefone
-  //   };
-  //   this.db.database.ref('Casos/').push(caseSalve).then(res => {
-  //     console.log(caseSalve);
-  //     console.log('Cadastrei');
-  //   });
-  //}
+  async googleSignIn() {
+    let googleUser = await GoogleAuth.signIn();
+    const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+    const res = await this.auth.signInAndRetrieveDataWithCredential(credential);
+    this.db.database
+    .ref('Users/' + res.user.uid)
+    .get()
+    .then((userRes) => {
+      const user = userRes.val();
+      if(!!user) {
+        this.saveUserOnStorage(user).then(() => {
+          this.router.navigate(['/home']);
+          this.fcmService.initPush();
+        });
+      } else {
+        const userToSave: User = {
+          _id: res.user.uid,
+          name: res.user.displayName,
+          email: res.user.email,
+          imagemUrl: res.user.photoURL,
+          phoneNumber: '',
+          savedCasesId: []
+        };
+        this.db.database.ref('Users/' + res.user.uid).set(userToSave);
+        this.saveUserOnStorage(userToSave).then(() => {
+          this.router.navigate(['/home']);
+          this.fcmService.initPush();
+        });
+      }
+    });
+    return res;
+  }
+
 }

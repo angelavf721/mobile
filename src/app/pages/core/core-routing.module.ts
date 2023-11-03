@@ -1,7 +1,6 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import {CorePage} from './core.page';
 
 const routes: Routes = [
   {
@@ -24,8 +23,8 @@ const routes: Routes = [
         loadChildren: () => import('./features/add-case/add-case.module').then(m => m.AddCasePageModule)
       },
       {
-        path: 'settings',
-        loadChildren: () => import('./features/settings/settings.module').then( m => m.SettingsPageModule)
+        path: 'user',
+        loadChildren: () => import('./features/user/user.module').then( m => m.UserPageModule)
       },
       {
         path: 'pesquisar',
@@ -38,10 +37,6 @@ const routes: Routes = [
       }
     ]
   },
-
-
-
-
 ];
 
 @NgModule({

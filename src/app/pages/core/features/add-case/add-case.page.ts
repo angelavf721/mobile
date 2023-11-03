@@ -4,12 +4,13 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
-import { ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import * as L from 'leaflet';
 import { nanoid } from 'nanoid';
 import { CaseService } from '../../../../services/cases/case.service';
 import { DatePipe, Location } from '@angular/common';
 import { FcmService } from 'src/app/services/push-notifications/fmc.service';
+import { phoneMask, maskPredicate } from 'src/utils/maskito';
 
 @Component({
   selector: 'app-add-case',
@@ -26,6 +27,9 @@ export class AddCasePage implements OnInit {
   private map: any;
   private marker: any;
 
+  phoneMask = phoneMask;
+  maskPredicate = maskPredicate;
+
   constructor(
     private toastController: ToastController,
     private caseService: CaseService,
@@ -33,12 +37,24 @@ export class AddCasePage implements OnInit {
     private fb: FormBuilder,
     private location: Location,
     private router: Router,
-    private element: ElementRef
+    private element: ElementRef,
+    private alertController: AlertController
   ) {
     const selectedCase = this.router.getCurrentNavigation().extras.state?.case;
     if (selectedCase) {
       this.case = selectedCase;
+    } else {
+      this.alerta();
     }
+  }
+
+  async alerta() {
+    const alert = await this.alertController.create({
+      header: 'Aviso',
+      message: 'O cadastro de um caso não substitui um boletim de ocorrência.',
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 
   get nome(): AbstractControl {

@@ -1,0 +1,120 @@
+<ion-content>
+  <div class="user-content">
+    <div class="user-header">
+      <ion-buttons slot="start">
+        <ion-button (click)="close()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Perfil</ion-title>
+    </div>
+    <div class="user-body">
+      <form
+        *ngIf="!loading"
+        [formGroup]="form">
+        <div class="photo">
+          <input
+            (change)="openImagePicker($event)"
+            type="file"
+            accept="image/*" />
+          <img
+            [src]="form.controls['imagemUrl'].value || '../../../../../assets/fotosKids/avatar.jpg'" />
+        </div>
+        <ion-item>
+          <ion-icon name="person-outline"></ion-icon>
+          <ion-input
+            formControlName="name"
+            placeholder="Nome"
+            required
+            type="text"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="form.controls['name'].errors && form.controls['name'].dirty || form.controls['name'].touched && form.controls['name'].invalid">
+            Nome Obrigatorio
+          </div>
+        </div>
+
+        <ion-item>
+          <ion-icon name="mail-outline"></ion-icon>
+          <ion-input
+            formControlName="email"
+            placeholder="Email"
+            type="email"
+            [disabled]="true"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon name="call-outline"></ion-icon>
+          <ion-input
+            formControlName="phoneNumber"
+            placeholder="Telefone"
+            [maskito]="phoneMask"
+            [maskitoElement]="maskPredicate"
+            required></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="form.controls['phoneNumber'].errors && form.controls['phoneNumber'].dirty || form.controls['phoneNumber'].touched && form.controls['phoneNumber'].invalid">
+            Telefone Obrigatorio
+          </div>
+        </div>
+
+        <div class="buttons">
+          <ion-button
+            [disabled]="form.invalid"
+            (click)="updateData()"
+            expand="block">
+            Atualizar informações
+          </ion-button>
+        </div>
+      </form>
+      <ion-item-divider> </ion-item-divider>
+      <form [formGroup]="passwordForm">
+        <ion-title class="update-passwd-title"> Atualizar senha </ion-title>
+        <ion-item>
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          <ion-input
+            formControlName="senha"
+            minlength="6"
+            placeholder="A senha deve conter no mínimo 6 caracteres"
+            required
+            type="password"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="passwordForm.controls['senha'].touched && passwordForm.controls['senha'].invalid">
+            A senha deve conter no mínimo 6 caracteres
+          </div>
+        </div>
+        <ion-item>
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          <ion-input
+            formControlName="confirmaSenha"
+            minlength="6"
+            placeholder="Confirmação de senha"
+            required
+            type="password"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <div
+            class="error-message"
+            *ngIf="passwordForm.controls['confirmaSenha'].touched && passwordForm.controls['confirmaSenha'].value !== passwordForm.controls['senha'].value">
+            A senha deve ser igual a do campo acima.
+          </div>
+        </div>
+        <div class="buttons">
+          <ion-button
+            [disabled]="passwordForm.invalid"
+            (click)="updateData()"
+            expand="block">
+            Atualizar senha
+          </ion-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

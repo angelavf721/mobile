@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { AddCasePage } from './add-case.page';
 import { RouterModule, Routes } from '@angular/router';
+import { MaskitoModule } from '@maskito/angular';
 
 const routes: Routes = [
   {
@@ -20,7 +21,8 @@ const routes: Routes = [
         FormsModule,
         IonicModule,
         ReactiveFormsModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        MaskitoModule
     ],
   declarations: [AddCasePage]
 })

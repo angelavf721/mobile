@@ -64,7 +64,8 @@
           formControlName="telefone"
           placeholder="Telefone"
           required
-          type="number"></ion-input>
+          [maskito]="phoneMask"
+          [maskitoElement]="maskPredicate"></ion-input>
       </ion-item>
       <div class="validation-errors">
         <div
