@@ -10,6 +10,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { AngularFireStorageModule, BUCKET } from '@angular/fire/compat/storage';
 import { HttpClientModule } from  '@angular/common/http';
+import { MaskitoModule } from '@maskito/angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,7 +30,9 @@ import { HttpClientModule } from  '@angular/common/http';
       measurementId: 'G-7HE6HJFJZK'
     }),
     AngularFireStorageModule,
-    AppRoutingModule],
+    AppRoutingModule,
+    MaskitoModule
+  ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     { provide: BUCKET, useValue: 'gs://bd-amber.appspot.com' }],

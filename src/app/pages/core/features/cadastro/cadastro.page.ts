@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../../../services/auth/auth.service';
 import {AngularFireDatabase} from '@angular/fire/compat/database';
+import { maskPredicate, phoneMask } from 'src/utils/maskito';
 
 
 @Component({
@@ -12,6 +13,8 @@ import {AngularFireDatabase} from '@angular/fire/compat/database';
 export class CadastroPage implements OnInit {
 
   form: FormGroup;
+  phoneMask = phoneMask;
+  maskPredicate = maskPredicate;
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,

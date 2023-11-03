@@ -86,7 +86,11 @@ export class HomePage implements OnInit {
         .subscribe((res) => {
           console.log("🚀 ~ file: home.page.ts:89 ~ HomePage ~ .subscribe ~ res:", res)
           this.user = res as User;
-          this.savedCasesList = this.items.filter(i => this.user.savedCasesId?.includes(i._id));
+          if(this.user.savedCasesId) {
+            this.savedCasesList = this.items.filter(i => this.user.savedCasesId?.includes(i._id));
+          } else {
+            this.savedCasesList = [];
+          }
           this.auth.saveUserOnStorage(this.user);
         });
       this.loading = false;

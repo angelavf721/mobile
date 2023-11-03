@@ -92,3 +92,45 @@ ion-icon {
   background-repeat: no-repeat;
   background-position: 12px 11px;
 }
+
+.f-pass {
+  text-align: center;
+  font-size: 0.9rem;
+
+  span {
+    color: #1f7a8c;
+  }
+}
+
+ion-modal#f-senha {
+  --width: 80vw;
+  --min-width: 80vw;
+  --height: fit-content;
+  --border-radius: 6px;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#f-senha h1 {
+  margin: 20px 20px 10px 20px;
+}
+
+ion-modal#f-senha .wrapper {
+  margin-bottom: 10px;
+}
+
+.f-senha-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  ion-item {
+    padding: 0 1rem 0 0 !important;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding: 1rem;
+  }
+}

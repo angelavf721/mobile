@@ -117,7 +117,8 @@
       <ion-button
         expand="block"
         (click)="submit()"
-        color="primary">
+        color="primary"
+        [disabled]="form.invalid">
         {{!!this.case ? 'Editar' : 'Cadastrar'}}
       </ion-button>
     </div>
@@ -148,7 +149,8 @@
             <ion-input
               formControlName="telefone"
               placeholder="Insira o telefone"
-              type="number">
+              [maskito]="phoneMask"
+              [maskitoElement]="maskPredicate">
             </ion-input>
           </ion-item>
         </div>

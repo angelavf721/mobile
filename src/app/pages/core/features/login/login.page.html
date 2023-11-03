@@ -31,6 +31,10 @@
         </div>
       </div>
 
+      <span class="f-pass">
+        Esqueceu sua senha? <span id="open-custom-dialog">clique aqui</span>
+      </span>
+
       <hr class="hr-text" />
 
       <div class="action-buttons">
@@ -41,10 +45,41 @@
         </div>
         <button
           type="button"
-          class="login-with-google-btn">
+          class="login-with-google-btn"
+          (click)="loginWithGoogle()">
           Entrar com Google
         </button>
       </div>
     </form>
   </div>
 </ion-content>
+
+<ion-modal
+  id="f-senha"
+  #modal
+  trigger="open-custom-dialog">
+  <ng-template>
+    <div class="wrapper">
+      <h1>Recuperar senha</h1>
+    </div>
+    <div class="f-senha-form">
+      <ion-item>
+        <ion-icon name="mail-outline"></ion-icon>
+        <ion-input
+          [formControl]="recuperarEmailValor"
+          placeholder="Email"
+          type="email">
+        </ion-input>
+      </ion-item>
+      <div class="action-buttons">
+        <ion-button
+          [disabled]="!recuperarEmailValor.valid"
+          expand="block"
+          color="primary"
+          (click)="recuperarSenha(modal, recuperarEmailValor.value)">
+          Recuperar
+        </ion-button>
+      </div>
+    </div>
+  </ng-template>
+</ion-modal>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { FcmService } from './services/push-notifications/fmc.service';
 import { Platform } from '@ionic/angular';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,8 @@ export class AppComponent {
   }
 
   initializeApp() {
-    console.log("🚀 ~ file: app.component.ts:20 ~ AppComponent ~ initializeApp ~ initializeApp:")
+    this.platform.ready().then(() => {
+      GoogleAuth.initialize();
+    })
   }
 }

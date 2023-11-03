@@ -1,0 +1,58 @@
+.user-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .user-header {
+    display: flex;
+    align-items: center;
+    ion-button {
+      padding: 1rem;
+    }
+    ion-title {
+      padding: 0;
+    }
+  }
+
+  .user-body form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+
+    .photo {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem 0;
+      img {
+        border-radius: 50%;
+        max-width: 160px;
+      }
+    }
+    .buttons {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.error-message {
+  padding: 0 1rem;
+  color: var(--ion-color-danger);
+}
+
+ion-icon {
+  margin-right: 0.5rem;
+}
+
+.update-passwd-title {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+input {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  opacity: 0;
+}

@@ -4,4 +4,5 @@
     <string name="title_activity_main">Alerta Amber</string>
     <string name="package_name">app.alerta_amber</string>
     <string name="custom_url_scheme">app.alerta_amber</string>
+    <string name="server_client_id">834947400379-0mu30err9sm0tadvbrrf8vdnrupkd41k.apps.googleusercontent.com</string>
 </resources>

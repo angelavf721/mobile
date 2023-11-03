@@ -1,7 +1,9 @@
 <ion-content>
   <div class="home-content">
     <div class="home-header">
-      <img [src]="user?.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'" />
+      <img
+        [routerLink]="['/user']"
+        [src]="user?.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'" />
       <span class="user-name"> {{user?.name}} </span>
 
       <div class="options">
@@ -159,97 +161,6 @@
       </div>
     </div>
   </div>
-  <!-- <ion-content fullscreen>
-  <div *ngIf="loading">
-    <ion-spinner name="crescent"></ion-spinner>
-  </div>
-
-  <div
-    *ngIf="!loading"
-    class="content">
-    <div
-      *ngIf="items.length"
-      class="cards">
-      <ion-card *ngFor="let item of items">
-        <div class="card">
-          <div
-            (click)="openCase(item)"
-            class="img-card">
-            <img [src]="item.imagemUrl || '../../../../../assets/fotosKids/avatar.jpg'" />
-          </div>
-
-          <div class="card-header">
-            <span>{{ item.nome }}</span>
-            <div class="options">
-              <div
-                id="open-share-with-user-modal"
-                class="option ion-activatable ripple-parent">
-                <ion-icon name="share-social-outline"></ion-icon>
-                <ion-ripple-effect></ion-ripple-effect>
-                <ion-modal
-                  [breakpoints]="[0, 0.25, 0.5, 0.75]"
-                  [enterAnimation]="enterAnimation"
-                  [initialBreakpoint]="0.25"
-                  [leaveAnimation]="leaveAnimation"
-                  #modal
-                  trigger="open-share-with-user-modal">
-                  <ng-template>
-                    <ion-content>
-                      <ion-searchbar
-                        (ionInput)="searchUser($event)"
-                        [debounce]="300"
-                        (click)="modal.setCurrentBreakpoint(0.75)"
-                        placeholder="Search"></ion-searchbar>
-                      <ion-list>
-                        <ion-item *ngFor="let user of usersToShare">
-                          <ion-avatar slot="start">
-                            <ion-img src="https://i.pravatar.cc/300?u=b"></ion-img>
-                          </ion-avatar>
-                          <ion-label>
-                            <h2>{{user.name}}</h2>
-                            <p>{{user.email}}</p>
-                          </ion-label>
-                        </ion-item>
-                      </ion-list>
-                    </ion-content>
-                  </ng-template>
-                </ion-modal>
-              </div>
-              <div class="option ion-activatable ripple-parent">
-                <div class="salve-button">
-                  <ion-icon
-                    (click)="addLista(item._id)"
-                    [name]="!caseIsSaved(item._id) ? 'bookmark-outline' : 'bookmark'"
-                    [ngStyle]="{'color': !caseIsSaved(item._id) ? 'black' : 'red' }"></ion-icon>
-                </div>
-                <ion-ripple-effect></ion-ripple-effect>
-              </div>
-            </div>
-          </div>
-
-          <div class="card-content">
-            <label> Data do desaparecimento: {{ item.data | date: 'dd/MM/yyyy' }} </label>
-            <label> Enviar informações para: {{item.contatos}} </label>
-          </div>
-        </div>
-      </ion-card>
-    </div>
-    <div
-      *ngIf="!items.length"
-      class="empty-message">
-      <ion-card color="warning">
-        <ion-card-header>
-          <div class="car-alert">
-            <ion-card-title>Nenhum caso registrado</ion-card-title>
-            <ion-card-content>
-              Se desejar adicionar um caso clique em "Adiconar Caso" no menu abaixo
-            </ion-card-content>
-          </div>
-        </ion-card-header>
-      </ion-card>
-    </div>
-  </div>
-</ion-content> -->
 </ion-content>
 
 <ion-fab
